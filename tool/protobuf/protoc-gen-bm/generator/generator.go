@@ -262,11 +262,11 @@ func (t *bm) generateBMRoute(
 		t.P(`func `, bmFuncName, `(e *bm.Engine, server `, servName, `BMServer,permission map[string][]string) {`)
 		t.P(svcName, ` = server`)
 		for _, methInfo := range methList {
-			comments, _ := t.Reg.MethodComments(file, service, methInfo)
-			tags := tag.GetTagsInComment(comments.Leading)
-			if tag.GetTagValue("dynamic", tags) == "true" {
-				continue
-			}
+			//comments, _ := t.Reg.MethodComments(file, service, methInfo)
+			//tags := tag.GetTagsInComment(comments.Leading)
+			//if tag.GetTagValue("dynamic", tags) == "true" {
+			//	continue
+			//}
 			t.P("//zhangjinglei")
 			t.P(`permission["`+methInfo.apiInfo.NewPath+`"]=[]string{"a","b","c"}`)
 			t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
