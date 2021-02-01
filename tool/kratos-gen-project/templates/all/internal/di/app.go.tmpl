@@ -3,8 +3,6 @@ package di
 import (
 	"context"
 	"time"
-
-	"{{.ModPrefix}}{{.Name}}/internal/service"
     "{{.ModPrefix}}{{.Name}}/internal/server/grpc"
 	"{{.ModPrefix}}{{.Name}}/internal/server/http"
 	"github.com/zhangjinglei/wahaha/pkg/log"
@@ -38,12 +36,12 @@ func NewApp( h *bm.Engine, g *warden.Server) (app *App, closeFunc func(), err er
 
 func InitApp() (*App, func(), error) {
 
-	engine, err := http.New(serviceService)
+	engine, err := http.New()
 	if err != nil {
 
 		return nil, nil, err
 	}
-	server, err := grpc.New(serviceService)
+	server, err := grpc.New()
 	if err != nil {
 
 		return nil, nil, err
