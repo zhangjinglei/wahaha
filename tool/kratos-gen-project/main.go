@@ -44,16 +44,16 @@ func main() {
 			Usage:       "指定项目所在目录",
 			Destination: &p.path,
 		},
-		&cli.BoolFlag{
-			Name:        "http",
-			Usage:       "只使用http 不使用grpc",
-			Destination: &p.onlyHTTP,
-		},
-		&cli.BoolFlag{
-			Name:        "grpc",
-			Usage:       "只使用grpc 不使用http",
-			Destination: &p.onlyGRPC,
-		},
+		//&cli.BoolFlag{
+		//	Name:        "http",
+		//	Usage:       "只使用http 不使用grpc",
+		//	Destination: &p.onlyHTTP,
+		//},
+		//&cli.BoolFlag{
+		//	Name:        "grpc",
+		//	Usage:       "只使用grpc 不使用http",
+		//	Destination: &p.onlyGRPC,
+		//},
 	}
 	if len(os.Args) < 2 || strings.HasPrefix(os.Args[1], "-") {
 		app.Run([]string{"-h"})
