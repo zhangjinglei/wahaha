@@ -10,7 +10,6 @@ import (
 	"github.com/zhangjinglei/wahaha/pkg/net/rpc/warden"
 )
 
-//go:generate kratos tool wire
 type App struct {
 	http *bm.Engine
 	grpc *warden.Server

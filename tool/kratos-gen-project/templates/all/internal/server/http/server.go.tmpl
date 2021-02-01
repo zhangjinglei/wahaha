@@ -3,14 +3,12 @@ package http
 import (
 	"net/http"
 
-	pb "{{.ModPrefix}}{{.Name}}/api"
 	"{{.ModPrefix}}{{.Name}}/internal/model"
 	"github.com/zhangjinglei/wahaha/pkg/conf/paladin"
 	"github.com/zhangjinglei/wahaha/pkg/log"
 	bm "github.com/zhangjinglei/wahaha/pkg/net/http/blademaster"
 )
 
-var svc pb.DemoServer
 
 // New new a bm server.
 func New() (engine *bm.Engine, err error) {
@@ -24,7 +22,6 @@ func New() (engine *bm.Engine, err error) {
 	if err = ct.Get("Server").UnmarshalTOML(&cfg); err != nil {
 		return
 	}
-	svc = s
 	engine = bm.DefaultServer(&cfg)
 	//pb.RegisterDemoBMServer(engine, s)
 	initRouter(engine)
