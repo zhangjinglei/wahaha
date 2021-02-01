@@ -54,12 +54,6 @@ func main() {
 			Usage:       "只使用grpc 不使用http",
 			Destination: &p.onlyGRPC,
 		},
-		&cli.BoolFlag{
-			Name:        "proto",
-			Usage:       "废弃参数 无作用",
-			Destination: &p.none,
-			Hidden:      true,
-		},
 	}
 	if len(os.Args) < 2 || strings.HasPrefix(os.Args[1], "-") {
 		app.Run([]string{"-h"})
