@@ -7,7 +7,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/go-kratos/kratos/pkg/conf/dsn"
+	"github.com/zhangjinglei/wahaha/pkg/conf/dsn"
 
 	"github.com/pkg/errors"
 )

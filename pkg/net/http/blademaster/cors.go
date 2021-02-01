@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-kratos/kratos/pkg/log"
+	"github.com/zhangjinglei/wahaha/pkg/log"
 
 	"github.com/pkg/errors"
 )

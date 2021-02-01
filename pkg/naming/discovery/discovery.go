@@ -13,12 +13,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/go-kratos/kratos/pkg/conf/env"
-	"github.com/go-kratos/kratos/pkg/ecode"
-	"github.com/go-kratos/kratos/pkg/log"
-	"github.com/go-kratos/kratos/pkg/naming"
-	http "github.com/go-kratos/kratos/pkg/net/http/blademaster"
-	xtime "github.com/go-kratos/kratos/pkg/time"
+	"github.com/zhangjinglei/wahaha/pkg/conf/env"
+	"github.com/zhangjinglei/wahaha/pkg/ecode"
+	"github.com/zhangjinglei/wahaha/pkg/log"
+	"github.com/zhangjinglei/wahaha/pkg/naming"
+	http "github.com/zhangjinglei/wahaha/pkg/net/http/blademaster"
+	xtime "github.com/zhangjinglei/wahaha/pkg/time"
 )
 
 const (

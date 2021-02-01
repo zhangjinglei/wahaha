@@ -1,8 +1,8 @@
 package jaeger
 
 import (
-	"github.com/go-kratos/kratos/pkg/conf/env"
-	"github.com/go-kratos/kratos/pkg/net/trace"
+	"github.com/zhangjinglei/wahaha/pkg/conf/env"
+	"github.com/zhangjinglei/wahaha/pkg/net/trace"
 )
 
 func Init() {

@@ -17,10 +17,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-kratos/kratos/pkg/conf/env"
-	"github.com/go-kratos/kratos/pkg/net/metadata"
-	"github.com/go-kratos/kratos/pkg/net/netutil/breaker"
-	xtime "github.com/go-kratos/kratos/pkg/time"
+	"github.com/zhangjinglei/wahaha/pkg/conf/env"
+	"github.com/zhangjinglei/wahaha/pkg/net/metadata"
+	"github.com/zhangjinglei/wahaha/pkg/net/netutil/breaker"
+	xtime "github.com/zhangjinglei/wahaha/pkg/time"
 
 	"github.com/gogo/protobuf/proto"
 	pkgerr "github.com/pkg/errors"

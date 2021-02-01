@@ -5,10 +5,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/go-kratos/kratos/pkg/log"
-	limit "github.com/go-kratos/kratos/pkg/ratelimit"
-	"github.com/go-kratos/kratos/pkg/ratelimit/bbr"
-	"github.com/go-kratos/kratos/pkg/stat/metric"
+	"github.com/zhangjinglei/wahaha/pkg/log"
+	limit "github.com/zhangjinglei/wahaha/pkg/ratelimit"
+	"github.com/zhangjinglei/wahaha/pkg/ratelimit/bbr"
+	"github.com/zhangjinglei/wahaha/pkg/stat/metric"
 	"google.golang.org/grpc"
 )
 

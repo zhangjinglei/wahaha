@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/go-kratos/kratos/pkg/net/metadata"
+	"github.com/zhangjinglei/wahaha/pkg/net/metadata"
 
 	"github.com/stretchr/testify/assert"
 )

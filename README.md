@@ -1,9 +1,9 @@
 ![kratos](docs/img/kratos3.png)
 
 [![Language](https://img.shields.io/badge/Language-Go-blue.svg)](https://golang.org/)
-[![Build Status](https://github.com/go-kratos/kratos/workflows/Go/badge.svg)](https://github.com/go-kratos/kratos/actions)
-[![GoDoc](https://godoc.org/github.com/go-kratos/kratos?status.svg)](https://godoc.org/github.com/go-kratos/kratos)
-[![Go Report Card](https://goreportcard.com/badge/github.com/go-kratos/kratos)](https://goreportcard.com/report/github.com/go-kratos/kratos)
+[![Build Status](https://github.com/zhangjinglei/wahaha/workflows/Go/badge.svg)](https://github.com/zhangjinglei/wahaha/actions)
+[![GoDoc](https://godoc.org/github.com/zhangjinglei/wahaha?status.svg)](https://godoc.org/github.com/zhangjinglei/wahaha)
+[![Go Report Card](https://goreportcard.com/badge/github.com/zhangjinglei/wahaha)](https://goreportcard.com/report/github.com/zhangjinglei/wahaha)
 [![Discord](https://img.shields.io/discord/766619759214854164?label=chat&logo=discord)](https://discord.gg/BWzJsUJ)
 
 # Kratos
@@ -35,13 +35,13 @@ Go version>=1.13
 ### Installation
 ```shell
 # Linux/macOS
-GO111MODULE=on && go get -u github.com/go-kratos/kratos/tool/kratos
+GO111MODULE=on && go get -u github.com/zhangjinglei/wahaha/tool/kratos
 
 # Windows (Powershell)
-go env -w GO111MODULE=on ; go get -u github.com/go-kratos/kratos/tool/kratos
+go env -w GO111MODULE=on ; go get -u github.com/zhangjinglei/wahaha/tool/kratos
 
 # Windows (CMD)
-go env -w GO111MODULE=on && go get -u github.com/go-kratos/kratos/tool/kratos
+go env -w GO111MODULE=on && go get -u github.com/zhangjinglei/wahaha/tool/kratos
 
 cd $GOPATH/src
 kratos new kratos-demo
