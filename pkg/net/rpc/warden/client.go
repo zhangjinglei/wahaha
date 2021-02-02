@@ -19,7 +19,6 @@ import (
 	"github.com/zhangjinglei/wahaha/pkg/naming"
 	nmd "github.com/zhangjinglei/wahaha/pkg/net/metadata"
 	"github.com/zhangjinglei/wahaha/pkg/net/netutil/breaker"
-	"github.com/zhangjinglei/wahaha/pkg/net/rpc/warden/balancer/p2c"
 	"github.com/zhangjinglei/wahaha/pkg/net/rpc/warden/internal/status"
 	"github.com/zhangjinglei/wahaha/pkg/net/trace"
 	xtime "github.com/zhangjinglei/wahaha/pkg/time"
@@ -197,7 +196,7 @@ func NewClient(conf *ClientConfig, opt ...grpc.DialOption) *Client {
 	if err := c.SetConfig(conf); err != nil {
 		panic(err)
 	}
-	c.UseOpt(grpc.WithBalancerName(p2c.Name))
+	//c.UseOpt(grpc.WithBalancerName(p2c.Name))
 	c.UseOpt(opt...)
 	return c
 }
