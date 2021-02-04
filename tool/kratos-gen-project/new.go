@@ -32,8 +32,8 @@ func runNew(ctx *cli.Context) (err error) {
 		return err
 	}
 	fmt.Printf("Project: %s\n", p.Name)
-	fmt.Printf("OnlyGRPC: %t\n", p.onlyGRPC)
-	fmt.Printf("OnlyHTTP: %t\n", p.onlyHTTP)
+	//fmt.Printf("OnlyGRPC: %t\n", p.onlyGRPC)
+	//fmt.Printf("OnlyHTTP: %t\n", p.onlyHTTP)
 	fmt.Printf("Directory: %s\n\n", p.path)
 	fmt.Println("项目创建成功.")
 	return nil
