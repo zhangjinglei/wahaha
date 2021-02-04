@@ -141,13 +141,13 @@ func latestKratos() (string, error) {
 	if _, err := os.Stat(ext); !os.IsNotExist(err) {
 		return ext, nil
 	}
-	baseMod := path.Join(gopath, "pkg/mod/github.com/go-kratos")
+	baseMod := path.Join(gopath, "pkg/mod/github.com/zhangjinglei")
 	files, err := ioutil.ReadDir(baseMod)
 	if err != nil {
 		return "", err
 	}
 	for i := len(files) - 1; i >= 0; i-- {
-		if strings.HasPrefix(files[i].Name(), "kratos@") {
+		if strings.HasPrefix(files[i].Name(), "wahaha@") {
 			return path.Join(baseMod, files[i].Name(), "third_party"), nil
 		}
 	}
