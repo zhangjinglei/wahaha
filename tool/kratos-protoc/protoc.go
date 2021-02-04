@@ -37,6 +37,9 @@ func protocAction(ctx *cli.Context) (err error) {
 		withSwagger = true
 		withEcode = true
 	}
+	if err = installGenGo();err!=nil{
+		return 
+	}
 	if withBM {
 		if err = installBMGen(); err != nil {
 			return
