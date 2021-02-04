@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"github.com/zhangjinglei/wahaha/tool/protobuf/pkg/extensions/permission"
 	"net/http"
 	"strings"
 
@@ -58,6 +59,10 @@ func GetHTTPInfo(
 	} else {
 		title = ""
 	}
+	parsePermission, err2 := ParsePermission(method)
+	if err2==nil{
+		println("================",parsePermission)
+	}
 	googleOptionInfo, err := ParseBMMethod(method)
 	if err == nil {
 		httpMethod = strings.ToUpper(googleOptionInfo.Method)
@@ -106,6 +111,15 @@ func (t *Base) GetHttpInfoCached(file *descriptor.FileDescriptorProto,
 		t.httpInfoCache[key] = httpInfo
 	}
 	return httpInfo
+}
+
+func ParsePermission(method *descriptor.MethodDescriptorProto) (string, error) {
+	ext, err := proto.GetExtension(method.GetOptions(), permission.E_Http)
+	if err!=nil{
+		return "",err
+	}
+	rule := ext.(*permission.HttpRule)
+	return rule.Method,nil
 }
 
 // ParseBMMethod parse BMMethodDescriptor form method descriptor proto
