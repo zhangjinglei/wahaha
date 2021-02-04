@@ -1,25 +1,25 @@
 package api
-import (
-	"context"
-	"fmt"
+//import (
+//	"context"
+//	"fmt"
 
-	"github.com/zhangjinglei/wahaha/pkg/net/rpc/warden"
+//	"github.com/zhangjinglei/wahaha/pkg/net/rpc/warden"
 
-	"google.golang.org/grpc"
+//	"google.golang.org/grpc"
 )
 
 // AppID .
-const AppID = "TODO: ADD APP ID"
-
+//const AppID = "TODO: ADD APP ID"
+// 这是旧架构的代码，拥有服务发现和负载均衡的策略，使用了istio以后，此功能没用了，相关代码也已经删除了
 // NewClient new grpc client
-func NewClient(cfg *warden.ClientConfig, opts ...grpc.DialOption) (DemoClient, error) {
-	client := warden.NewClient(cfg, opts...)
-	cc, err := client.Dial(context.Background(), fmt.Sprintf("discovery://default/%s", AppID))
-	if err != nil {
-		return nil, err
-	}
-	return NewDemoClient(cc), nil
-}
+//func NewClient(cfg *warden.ClientConfig, opts ...grpc.DialOption) (DemoClient, error) {
+//	client := warden.NewClient(cfg, opts...)
+//	cc, err := client.Dial(context.Background(), fmt.Sprintf("discovery://default/%s", AppID))
+//	if err != nil {
+//		return nil, err
+//	}
+//	return NewDemoClient(cc), nil
+//}
 
 // 生成 gRPC 代码
 //go:generate kratos tool protoc --grpc --bm api.proto

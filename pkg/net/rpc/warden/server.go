@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/zhangjinglei/wahaha/pkg/conf/flagvar"
 	"math"
 	"net"
 	"os"
@@ -29,7 +30,7 @@ import (
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/reflection"
 )
-
+var _grpcTarget flagvar.StringVars
 var (
 	_grpcDSN        string
 	_defaultSerConf = &ServerConfig{
