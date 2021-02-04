@@ -259,7 +259,7 @@ func (t *bm) generateBMRoute(
 		// 新的注册路由的方法
 		var bmFuncName = fmt.Sprintf("Register%sBMServer", servName)
 		t.P(`// `, bmFuncName, ` Register the blademaster route`)
-		t.P(`func `, bmFuncName, `(e *bm.Engine, server `, servName, `BMServer,permission map[string][]string) {`)
+		t.P(`func `, bmFuncName, `(e *bm.Engine, server `, servName, `BMServer) {`)
 		t.P(svcName, ` = server`)
 		for _, methInfo := range methList {
 			//comments, _ := t.Reg.MethodComments(file, service, methInfo)
@@ -267,8 +267,8 @@ func (t *bm) generateBMRoute(
 			//if tag.GetTagValue("dynamic", tags) == "true" {
 			//	continue
 			//}
-			t.P("//zhangjinglei")
-			t.P(`permission["`+methInfo.apiInfo.NewPath+`"]=[]string{"a","b","c"}`)
+			//t.P("//zhangjinglei")
+			//t.P(`permission["`+methInfo.apiInfo.NewPath+`"]=[]string{"a","b","c"}`)
 			t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
 		}
 		t.P(`	}`)
