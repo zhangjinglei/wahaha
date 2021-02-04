@@ -14,7 +14,7 @@ option objc_class_prefix = "GAPI";
 
 extend google.protobuf.MethodOptions {
   // See `HttpRule`.
-  HttpRule http = 72295728;
+  HttpRule http = 72295628;
 }
 
 message HttpRule {
