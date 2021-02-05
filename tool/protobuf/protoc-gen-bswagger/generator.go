@@ -69,6 +69,7 @@ func (t *swaggerGen) generateSwagger(file *descriptor.FileDescriptorProto) *plug
 	out := &plugin.CodeGeneratorResponse_File{}
 	name := naming.GenFileName(file, ".swagger.json")
 	for _, svc := range file.Service {
+		svc_comments, _ := t.Reg.ServiceComments(file, svc)
 		for _, meth := range svc.Method {
 			if !t.ShouldGenForMethod(file, svc, meth) {
 				continue
@@ -82,7 +83,8 @@ func (t *swaggerGen) generateSwagger(file *descriptor.FileDescriptorProto) *plug
 			op.Summary = apiInfo.Title
 			op.Description = apiInfo.Description
 			swaggerObj.Paths[apiInfo.Path] = pathItem
-			op.Tags = []string{pkg + "." + svc.GetName()}
+
+			op.Tags = []string{pkg + "." + svc.GetName()+"  "+svc_comments.Leading}
 
 			// request
 			request := t.Reg.MessageDefinition(meth.GetInputType())

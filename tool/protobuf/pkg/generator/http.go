@@ -88,11 +88,11 @@ func GetHTTPInfo(
 		perm=parsePermission.GetPerm()
 		permcode=strings.TrimSpace(parsePermission.GetPermcode())
 		if parsePermission.GetPerm()==permission.Permission_IgnoreLogin{
-			desc+=`┈┈┈┈┈\uD83D\uDEB8无需登录,无需权限`
+			desc+="┈┈┈┈┈✨无需登录,无需权限"
 		}else if parsePermission.GetPerm()==permission.Permission_LoginWithNoPermission{
-			desc+=`┈┈┈┈┈\uD83D\uDEB8需登录,无需权限`
+			desc+=`┈┈┈┈┈✔需登录,无需权限`
 		}else {
-			desc+=`┈┈┈┈┈✅权限码`+permcode
+			desc+=`┈┈┈┈┈✅权限码:`+permcode
 		}
 		httpMethod = strings.ToUpper(parsePermission.Method.String())
 	}
