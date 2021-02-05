@@ -1,31 +1,55 @@
 // 定义项目 API 的 proto 文件 可以同时描述 gRPC 和 HTTP API
-// protobuf 文件参考:
-//  - https://developers.google.com/protocol-buffers/
+
 syntax = "proto3";
 
 import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "google/protobuf/empty.proto";
-//import "google/api/annotations.proto";
+import "github.com/zhangjinglei/permission.proto";
 
 // package 命名使用 {appid}.{version} 的方式, version 形如 v1, v2 ..
 package demo.service.v1;
 
-// NOTE: 最后请删除这些无用的注释 (゜-゜)つロ
-
 option go_package = "api";
 option (gogoproto.goproto_getters_all) = false;
 
+//测试service
 service Demo {
-  rpc Ping(.google.protobuf.Empty) returns (.google.protobuf.Empty);
-  rpc SayHello(HelloReq) returns (.google.protobuf.Empty);
+  /*
+    只提供grpc
+    如果没有声明 option (bidewu.http)，则不会生成http接口，也不会有对应的swagger文档
+    */
+  rpc GrpcOnly(.google.protobuf.Empty) returns (.google.protobuf.Empty);
+
+  //无参的方法案例，http和grpc
+  rpc Ping(.google.protobuf.Empty) returns (.google.protobuf.Empty){
+    //需要登录，但补需要权限
+    option (bidewu.http)={
+      method:Post,
+      perm:LoginWithNoPermission,
+    };
+  };
+  //无返回的方法案例
+  rpc SayHello(HelloReq) returns (.google.protobuf.Empty){
+    //需要权限，权限码是456
+    option (bidewu.http)={
+      method:Post,
+      perm:NeedPerm,
+      permcode:"456"
+    };
+  };
+  //普通方法案例
   rpc SayHelloURL(HelloReq) returns (HelloResp) {
-//    option (google.api.http) = {
-//      get: "/kratos-demo/say_hello"
-//    };
+    //不需要登录，也不需要权限
+    option (bidewu.http)={
+      method:Post,
+      perm:IgnoreLogin,
+    };
   };
 }
 
 message HelloReq {
+  //参数验证采用https://github.com/go-playground/validator框架，http和grpc都会验证
+  //使用方式如下 validate:""
   string name = 1 [(gogoproto.moretags) = 'form:"name" validate:"required"'];
 }
 
