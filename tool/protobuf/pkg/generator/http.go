@@ -78,7 +78,7 @@ func GetHTTPInfo(
 		if parsePermission.GetMethod() != permission.HttpMethod_No &&
 			parsePermission.GetPerm() == permission.Permission_NeedPerm &&
 			strings.TrimSpace(parsePermission.GetPermcode()) == "" {
-			panic(errors.New(service.GetName() + "." + method.GetName() + "缺少权限码定义"))
+			panic(errors.New("缺少权限码定义permcode:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
 		}
 		httpMethod = strings.ToUpper(parsePermission.Method.String())
 	}
