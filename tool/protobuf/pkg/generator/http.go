@@ -77,7 +77,7 @@ func GetHTTPInfo(
 			explicitHTTPPath = false
 		}
 
-		println("================", parsePermission)
+		//println("================", parsePermission)
 		if parsePermission.GetMethod() != permission.HttpMethod_No &&
 			parsePermission.GetPerm() == permission.Permission_NeedPerm &&
 			strings.TrimSpace(parsePermission.GetPermcode()) == "" {
