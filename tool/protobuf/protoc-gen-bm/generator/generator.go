@@ -305,7 +305,7 @@ func (t *bm) generateBMInterface(file *descriptor.FileDescriptorProto, service *
 	}
 	t.P(`type `, servName, `BMServer interface {`)
 	for _, method := range service.Method {
-		println("t.ShouldGenForMethod(file, service, method)",t.ShouldGenForMethod(file, service, method))
+
 		if !t.ShouldGenForMethod(file, service, method) {
 			continue
 		}
