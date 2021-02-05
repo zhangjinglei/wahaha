@@ -303,12 +303,12 @@ func (t *Base) ShouldGenForMethod(file *descriptor.FileDescriptorProto,
 	if streamingMethod(method) {
 		return false
 	}
-	if !t.Params.ExplicitHTTP {
-		println("t.Params.ExplicitHTTP",t.Params.ExplicitHTTP)
-		return true
-	}
+	//if !t.Params.ExplicitHTTP {
+	//	println("t.Params.ExplicitHTTP",t.Params.ExplicitHTTP)
+	//	return true
+	//}
 	httpInfo := t.GetHttpInfoCached(file, service, method)
-	println("httpInfo.HasExplicitHTTPPath",httpInfo.HasExplicitHTTPPath)
+	//println("httpInfo.HasExplicitHTTPPath",httpInfo.HasExplicitHTTPPath)
 	return httpInfo.HasExplicitHTTPPath
 }
 func (t *Base) SubstituteImportPath(importPath string, importFile string) string {

@@ -1,6 +1,7 @@
 package generator
 
 import (
+	"errors"
 	"fmt"
 	"github.com/zhangjinglei/wahaha/tool/protobuf/pkg/extensions/permission"
 	"net/http"
@@ -15,6 +16,8 @@ import (
 
 // HTTPInfo http info for method
 type HTTPInfo struct {
+	Permission  permission.HttpRule_Permission
+	PermissionCode string
 	HttpMethod   string
 	Path         string
 	LegacyPath   string
@@ -43,10 +46,10 @@ func GetHTTPInfo(
 		desc             string
 		httpMethod       string
 		newPath          string
-		explicitHTTPPath bool
+		explicitHTTPPath bool=true
 	)
 	comment, _ := reg.MethodComments(file, service, method)
-	tags := tag.GetTagsInComment(comment.Leading)
+	//tags := tag.GetTagsInComment(comment.Leading)
 	cleanComments := tag.GetCommentWithoutTag(comment.Leading)
 	if len(cleanComments) > 0 {
 		title = strings.Trim(cleanComments[0], "\n\r ")
@@ -59,40 +62,50 @@ func GetHTTPInfo(
 	} else {
 		title = ""
 	}
-	//parsePermission, err2 := ParsePermission(method)
-	//if err2!=nil {
-	//	panic(err2)
+	parsePermission, err2 := ParsePermission(method)
+	if err2!=nil {
+		panic(err2)
+	}
+	//不生成http接口
+	if parsePermission.GetMethod()==permission.HttpRule_No{
+		explicitHTTPPath=false
+	}
+
+	println("================",parsePermission)
+	if parsePermission.GetMethod()!=permission.HttpRule_No &&
+		parsePermission.GetPerm()==permission.HttpRule_NeedPerm &&
+		strings.TrimSpace(parsePermission.GetPermcode())==""{
+		panic(errors.New(service.String()+"."+method.String()+"缺少权限码定义"))
+	}
+	httpMethod = strings.ToUpper(parsePermission.Method.String())
+
+	//googleOptionInfo, err := ParseBMMethod(method)
+	//if err == nil {
+	//	httpMethod = strings.ToUpper(googleOptionInfo.Method)
+	//	p := googleOptionInfo.PathPattern
+	//	if p != "" {
+	//		explicitHTTPPath = true
+	//		newPath = p
+	//		goto END
+	//	}
 	//}
-	//
-	//println("================",parsePermission)
-	//
-	//httpMethod = strings.ToUpper(parsePermission.Method.String())
 
-	googleOptionInfo, err := ParseBMMethod(method)
-	if err == nil {
-		httpMethod = strings.ToUpper(googleOptionInfo.Method)
-		p := googleOptionInfo.PathPattern
-		if p != "" {
-			explicitHTTPPath = true
-			newPath = p
-			goto END
-		}
-	}
-
-	if httpMethod == "" {
-		// resolve http method
-		httpMethod = tag.GetTagValue("method", tags)
-		if httpMethod == "" {
-			httpMethod = "GET"
-		} else {
-			httpMethod = strings.ToUpper(httpMethod)
-		}
-	}
+	//if httpMethod == "" {
+	//	// resolve http method
+	//	httpMethod = tag.GetTagValue("method", tags)
+	//	if httpMethod == "" {
+	//		httpMethod = "GET"
+	//	} else {
+	//		httpMethod = strings.ToUpper(httpMethod)
+	//	}
+	//}
 
 	newPath = "/" + file.GetPackage() + "." + service.GetName() + "/" + method.GetName()
-END:
+//END:
 	var p = newPath
 	param := &HTTPInfo{HttpMethod: httpMethod,
+		Permission:parsePermission.GetPerm(),
+		PermissionCode:strings.TrimSpace(parsePermission.GetPermcode()),
 		Path:                p,
 		NewPath:             newPath,
 		IsLegacyPath:        false,

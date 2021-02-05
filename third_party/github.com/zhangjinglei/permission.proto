@@ -25,7 +25,7 @@ message HttpRule {
     Get = 1;
     Post = 2; // application/json
   }
-  optional HttpMethod method = 1 [default = No];
+  required HttpMethod method = 1 [default = No];
 
   enum Permission {
     IgnoreLogin = 0; //不需要登录，也不需要权限
@@ -33,6 +33,6 @@ message HttpRule {
     NeedPerm = 2; // 需要权限
   }
   //权限
-  optional Permission perm = 2 [default = NeedPerm];//默认值：NeedPerm
+  required Permission perm = 2 [default = NeedPerm];//默认值：NeedPerm
   optional string permcode=3;
 }
