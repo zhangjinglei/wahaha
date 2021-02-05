@@ -16,7 +16,7 @@ import (
 
 // HTTPInfo http info for method
 type HTTPInfo struct {
-	Permission  permission.HttpRule_Permission
+	Permission  permission.Permission
 	PermissionCode string
 	HttpMethod   string
 	Path         string
@@ -70,13 +70,13 @@ func GetHTTPInfo(
 	}else {
 		//定义了http扩展，但是是No
 		//不生成http接口
-		if parsePermission.GetMethod() == permission.HttpRule_No {
+		if parsePermission.GetMethod() == permission.HttpMethod_No {
 			explicitHTTPPath = false
 		}
 
 		println("================", parsePermission)
-		if parsePermission.GetMethod() != permission.HttpRule_No &&
-			parsePermission.GetPerm() == permission.HttpRule_NeedPerm &&
+		if parsePermission.GetMethod() != permission.HttpMethod_No &&
+			parsePermission.GetPerm() == permission.Permission_NeedPerm &&
 			strings.TrimSpace(parsePermission.GetPermcode()) == "" {
 			panic(errors.New(service.String() + "." + method.String() + "缺少权限码定义"))
 		}

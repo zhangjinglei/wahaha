@@ -18,21 +18,25 @@ extend google.protobuf.MethodOptions {
 }
 
 message HttpRule {
-  //httpmethod：get，post
-  //如果不想提供http接口，可以 method:"no"
-  enum HttpMethod {
-    No = 0; //不提供http接口
-    Get = 1;
-    Post = 2; // application/json
-  }
-  HttpMethod method = 1 ;
 
-  enum Permission {
-    IgnoreLogin = 0; //不需要登录，也不需要权限
-    LoginWithNoPermission = 1;//需要登录，但不需要权限
-    NeedPerm = 2; // 需要权限
-  }
+   HttpMethod method = 1 ;
+
   //权限
   Permission perm = 2 ;//默认值：NeedPerm
   string permcode=3;
+}
+
+//httpmethod：get，post
+//如果不想提供http接口，可以 method:"no"
+enum HttpMethod {
+  No = 0; //不提供http接口
+  Get = 1;
+  Post = 2; // application/json
+}
+
+
+enum Permission {
+  IgnoreLogin = 0; //不需要登录，也不需要权限
+  LoginWithNoPermission = 1;//需要登录，但不需要权限
+  NeedPerm = 2; // 需要权限
 }
