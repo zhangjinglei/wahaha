@@ -1,22 +1,38 @@
-syntax = "proto3";
+syntax = "proto2";
 
 package bidewu;
 
 import "google/protobuf/descriptor.proto";
 
 
-option go_package = "github.com/zhangjinglei/wahaha;permission";
+option go_package = "permission;permission";
 option java_multiple_files = true;
-option java_outer_classname = "AnnotationsProto";
-option java_package = "com.google.api";
-option objc_class_prefix = "GAPI";
+option java_outer_classname = "BidewuPermission";
+option java_package = "com.bidewu.auth";
+option objc_class_prefix = "BIDEWUAUTH";
 
 
 extend google.protobuf.MethodOptions {
   // See `HttpRule`.
-  HttpRule http = 72295628;
+  optional HttpRule http = 72295628;
 }
 
 message HttpRule {
-  string method = 1;
+  //httpmethod：get，post
+  //如果不想提供http接口，可以 method:"no"
+  enum HttpMethod {
+    No = 0; //不提供http接口
+    Get = 1;
+    Post = 2; // application/json
+  }
+  optional HttpMethod method = 1 [default = No];
+
+  enum Permission {
+    IgnoreLogin = 0; //不需要登录，也不需要权限
+    LoginWithNoPermission = 1;//需要登录，但不需要权限
+    NeedPerm = 2; // 需要权限
+  }
+  //权限
+  optional Permission perm = 2 [default = NeedPerm];//默认值：NeedPerm
+  optional string permcode=3;
 }

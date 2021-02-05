@@ -59,10 +59,15 @@ func GetHTTPInfo(
 	} else {
 		title = ""
 	}
-	parsePermission, err2 := ParsePermission(method)
-	if err2==nil{
-		println("================",parsePermission)
-	}
+	//parsePermission, err2 := ParsePermission(method)
+	//if err2!=nil {
+	//	panic(err2)
+	//}
+	//
+	//println("================",parsePermission)
+	//
+	//httpMethod = strings.ToUpper(parsePermission.Method.String())
+
 	googleOptionInfo, err := ParseBMMethod(method)
 	if err == nil {
 		httpMethod = strings.ToUpper(googleOptionInfo.Method)
@@ -113,13 +118,13 @@ func (t *Base) GetHttpInfoCached(file *descriptor.FileDescriptorProto,
 	return httpInfo
 }
 
-func ParsePermission(method *descriptor.MethodDescriptorProto) (string, error) {
+func ParsePermission(method *descriptor.MethodDescriptorProto) (*permission.HttpRule, error) {
 	ext, err := proto.GetExtension(method.GetOptions(), permission.E_Http)
 	if err!=nil{
-		return "",err
+		return nil,err
 	}
 	rule := ext.(*permission.HttpRule)
-	return rule.Method,nil
+	return rule,nil
 }
 
 // ParseBMMethod parse BMMethodDescriptor form method descriptor proto
