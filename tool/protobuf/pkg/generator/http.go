@@ -47,6 +47,8 @@ func GetHTTPInfo(
 		httpMethod       string
 		newPath          string
 		explicitHTTPPath bool=true
+		perm permission.Permission=permission.Permission_NeedPerm
+		permcode string=""
 	)
 	comment, _ := reg.MethodComments(file, service, method)
 	//tags := tag.GetTagsInComment(comment.Leading)
@@ -62,6 +64,7 @@ func GetHTTPInfo(
 	} else {
 		title = ""
 	}
+
 	parsePermission, err2 := ParsePermission(method)
 	if err2!=nil {
 		//没有定义http扩展
@@ -79,6 +82,17 @@ func GetHTTPInfo(
 			parsePermission.GetPerm() == permission.Permission_NeedPerm &&
 			strings.TrimSpace(parsePermission.GetPermcode()) == "" {
 			panic(errors.New("缺少权限码定义permcode:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
+		}
+
+
+		perm=parsePermission.GetPerm()
+		permcode=strings.TrimSpace(parsePermission.GetPermcode())
+		if parsePermission.GetPerm()==permission.Permission_IgnoreLogin{
+			desc+=`┈┈┈┈┈\uD83D\uDEB8无需登录,无需权限`
+		}else if parsePermission.GetPerm()==permission.Permission_LoginWithNoPermission{
+			desc+=`┈┈┈┈┈\uD83D\uDEB8需登录,无需权限`
+		}else {
+			desc+=`┈┈┈┈┈✅权限码`+permcode
 		}
 		httpMethod = strings.ToUpper(parsePermission.Method.String())
 	}
@@ -110,8 +124,8 @@ func GetHTTPInfo(
 //END:
 	var p = newPath
 	param := &HTTPInfo{HttpMethod: httpMethod,
-		Permission:parsePermission.GetPerm(),
-		PermissionCode:strings.TrimSpace(parsePermission.GetPermcode()),
+		Permission:perm,
+		PermissionCode:permcode,
 		Path:                p,
 		NewPath:             newPath,
 		IsLegacyPath:        false,
