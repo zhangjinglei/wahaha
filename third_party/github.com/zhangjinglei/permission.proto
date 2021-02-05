@@ -1,4 +1,4 @@
-syntax = "proto3";
+syntax = "proto2";
 
 package bidewu;
 
@@ -14,16 +14,16 @@ option objc_class_prefix = "BIDEWUAUTH";
 
 extend google.protobuf.MethodOptions {
   // See `HttpRule`.
-  HttpRule http = 72295628;
+  optional HttpRule http = 72295628;
 }
 
 message HttpRule {
 
-   HttpMethod method = 1 ;
+  required  HttpMethod method = 1 ;
 
   //权限
-  Permission perm = 2 ;//默认值：NeedPerm
-  string permcode=3;
+  required Permission perm = 2 [default=NeedPerm];//默认值：NeedPerm
+  optional string permcode=3;
 }
 
 //httpmethod：get，post
@@ -36,7 +36,7 @@ enum HttpMethod {
 
 
 enum Permission {
-  IgnoreLogin = 0; //不需要登录，也不需要权限
+  IgnoreLogin = 2; //不需要登录，也不需要权限
   LoginWithNoPermission = 1;//需要登录，但不需要权限
-  NeedPerm = 2; // 需要权限
+  NeedPerm = 0; // 需要权限
 }
