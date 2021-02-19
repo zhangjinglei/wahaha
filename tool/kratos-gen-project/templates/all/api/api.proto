@@ -24,7 +24,7 @@ service Demo {
   rpc Ping(.google.protobuf.Empty) returns (.google.protobuf.Empty){
     //需要登录，但补需要权限
     option (bidewu.http)={
-      method:Post,
+      get:"/hello"
       perm:LoginWithNoPermission,
     };
   };
@@ -32,7 +32,7 @@ service Demo {
   rpc SayHello(HelloReq) returns (.google.protobuf.Empty){
     //需要权限，权限码是456
     option (bidewu.http)={
-      method:Post,
+      post:"",
       perm:NeedPerm,
       permcode:"456"
     };
@@ -41,7 +41,7 @@ service Demo {
   rpc SayHelloURL(HelloReq) returns (HelloResp) {
     //不需要登录，也不需要权限
     option (bidewu.http)={
-      method:Post,
+      post:"",
       perm:IgnoreLogin,
     };
   };

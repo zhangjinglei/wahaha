@@ -47,7 +47,7 @@ func GetHTTPInfo(
 		httpMethod       string
 		newPath          string
 		explicitHTTPPath bool=true
-		perm permission.Permission=permission.Permission_NeedPerm
+		perm =permission.Permission_NeedPerm
 		permcode string=""
 	)
 	comment, _ := reg.MethodComments(file, service, method)
@@ -71,15 +71,24 @@ func GetHTTPInfo(
 		//不生成http接口
 		explicitHTTPPath=false
 	}else {
-		//定义了http扩展，但是是No
-		//不生成http接口
-		if parsePermission.GetMethod() == permission.HttpMethod_No {
-			explicitHTTPPath = false
+
+		_,ok:=parsePermission.GetPattern().(*permission.HttpRule_Get)
+		if ok{
+			httpMethod = "GET"
+			newPath=parsePermission.GetGet()
+		}else {
+			_,ok:=parsePermission.GetPattern().(*permission.HttpRule_Post)
+			if ok{
+				httpMethod = "POST"
+				newPath=parsePermission.GetPost()
+			}
+		}
+		if newPath==""{
+			newPath = "/" + file.GetPackage() + "." + service.GetName() + "/" + method.GetName()
 		}
 
 		//println("================", parsePermission)
-		if parsePermission.GetMethod() != permission.HttpMethod_No &&
-			parsePermission.GetPerm() == permission.Permission_NeedPerm &&
+		if parsePermission.GetPerm() == permission.Permission_NeedPerm &&
 			strings.TrimSpace(parsePermission.GetPermcode()) == "" {
 			panic(errors.New("缺少权限码定义permcode:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
 		}
@@ -94,33 +103,11 @@ func GetHTTPInfo(
 		}else {
 			title+=`┈┈┈┈┈✅权限码:`+permcode
 		}
-		httpMethod = strings.ToUpper(parsePermission.Method.String())
-	}
-	//googleOptionInfo, err := ParseBMMethod(method)
-	//if err!=nil{
-	//	println(err.Error())
-	//}
-	//if err == nil {
-	//	httpMethod = strings.ToUpper(googleOptionInfo.Method)
-	//	p := googleOptionInfo.PathPattern
-	//	if p != "" {
-	//		explicitHTTPPath = true
-	//		newPath = p
-	//		goto END
-	//	}
-	//}
-	//
-	//if httpMethod == "" {
-	//	// resolve http method
-	//	httpMethod = tag.GetTagValue("method", tags)
-	//	if httpMethod == "" {
-	//		httpMethod = "GET"
-	//	} else {
-	//		httpMethod = strings.ToUpper(httpMethod)
-	//	}
-	//}
 
-	newPath = "/" + file.GetPackage() + "." + service.GetName() + "/" + method.GetName()
+	}
+
+
+
 //END:
 	var p = newPath
 	param := &HTTPInfo{HttpMethod: httpMethod,

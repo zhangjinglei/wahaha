@@ -19,20 +19,27 @@ extend google.protobuf.MethodOptions {
 
 message HttpRule {
 
-  required  HttpMethod method = 1 ;
+  oneof pattern {
+    // Used for listing and getting information about resources.
+    string get = 1;
+    // Used for creating a resource.
+    string post = 2;
 
+  }
   //权限
-  required Permission perm = 2 [default=NeedPerm];//默认值：NeedPerm
-  optional string permcode=3;
+  required Permission perm = 3 [default=NeedPerm];//默认值：NeedPerm
+  optional string permcode=4;
+  //所属系统
+  optional string app=5;
 }
 
 //httpmethod：get，post
 //如果不想提供http接口，可以 method:"no"
-enum HttpMethod {
-  No = 0; //不提供http接口
-  Get = 1;
-  Post = 2; // application/json
-}
+//enum HttpMethod {
+//  No = 0; //不提供http接口
+//  Get = 1;
+//  Post = 2; // application/json
+//}
 
 
 enum Permission {
