@@ -16,6 +16,7 @@ import (
 
 // HTTPInfo http info for method
 type HTTPInfo struct {
+	App string
 	Permission  permission.Permission
 	PermissionCode string
 	HttpMethod   string
@@ -49,6 +50,7 @@ func GetHTTPInfo(
 		explicitHTTPPath bool=true
 		perm =permission.Permission_NeedPerm
 		permcode string=""
+		app=""
 	)
 	comment, _ := reg.MethodComments(file, service, method)
 	//tags := tag.GetTagsInComment(comment.Leading)
@@ -71,7 +73,7 @@ func GetHTTPInfo(
 		//不生成http接口
 		explicitHTTPPath=false
 	}else {
-
+		app=parsePermission.GetApp()
 		_,ok:=parsePermission.GetPattern().(*permission.HttpRule_Get)
 		if ok{
 			httpMethod = "GET"
@@ -88,9 +90,13 @@ func GetHTTPInfo(
 		}
 
 		//println("================", parsePermission)
-		if parsePermission.GetPerm() == permission.Permission_NeedPerm &&
-			strings.TrimSpace(parsePermission.GetPermcode()) == "" {
-			panic(errors.New("缺少权限码定义permcode:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
+		if parsePermission.GetPerm() == permission.Permission_NeedPerm {
+			if strings.TrimSpace(parsePermission.GetPermcode()) == "" {
+				panic(errors.New("缺少权限码定义permcode:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
+			}
+			if strings.TrimSpace(parsePermission.GetApp()) == "" {
+				panic(errors.New("缺少app定义:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
+			}
 		}
 
 
@@ -110,7 +116,9 @@ func GetHTTPInfo(
 
 //END:
 	var p = newPath
-	param := &HTTPInfo{HttpMethod: httpMethod,
+	param := &HTTPInfo{
+		App:app,
+		HttpMethod: httpMethod,
 		Permission:perm,
 		PermissionCode:permcode,
 		Path:                p,

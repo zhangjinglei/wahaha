@@ -2,6 +2,7 @@ package generator
 
 import (
 	"fmt"
+	"github.com/zhangjinglei/wahaha/tool/protobuf/pkg/extensions/permission"
 	"reflect"
 	"sort"
 	"strings"
@@ -269,7 +270,13 @@ func (t *bm) generateBMRoute(
 			//}
 			//t.P("//zhangjinglei")
 			//t.P(`permission["`+methInfo.apiInfo.NewPath+`"]=[]string{"a","b","c"}`)
-			t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
+			if methInfo.apiInfo.Permission!=permission.Permission_IgnoreLogin{
+				t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",e.AuthMid("`+methInfo.apiInfo.App+`","`+methInfo.apiInfo.PermissionCode+`"),`, methInfo.routeFuncName, ` )`)
+			}else {
+				t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
+			}
+
+
 		}
 		t.P(`	}`)
 	}

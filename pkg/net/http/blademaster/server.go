@@ -151,6 +151,7 @@ type Engine struct {
 	allNoMethod []HandlerFunc
 	noRoute     []HandlerFunc
 	noMethod    []HandlerFunc
+	AuthMid func(app string,permcode string)HandlerFunc
 
 	pool sync.Pool
 }
@@ -180,6 +181,9 @@ func NewServer(conf *ServerConfig) *Engine {
 		methodConfigs:          make(map[string]*MethodConfig),
 		HandleMethodNotAllowed: true,
 		injections:             make([]injection, 0),
+		AuthMid: func(app string,permcode string) HandlerFunc {
+			return func(c *Context){ }
+		},
 	}
 	if err := engine.SetConfig(conf); err != nil {
 		panic(err)
@@ -515,3 +519,5 @@ func (engine *Engine) rebuild404Handlers() {
 func (engine *Engine) rebuild405Handlers() {
 	engine.allNoMethod = engine.combineHandlers(engine.noMethod)
 }
+
+
