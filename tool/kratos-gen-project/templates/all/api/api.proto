@@ -24,7 +24,8 @@ service Demo {
   rpc Ping(.google.protobuf.Empty) returns (.google.protobuf.Empty){
     //需要登录，但补需要权限
     option (bidewu.http)={
-      get:"/hello"
+      get:"/hello",
+      app:"demo"
       perm:LoginWithNoPermission,
     };
   };
@@ -34,6 +35,7 @@ service Demo {
     option (bidewu.http)={
       post:"",
       perm:NeedPerm,
+      app:"demo"
       permcode:"456"
     };
   };
