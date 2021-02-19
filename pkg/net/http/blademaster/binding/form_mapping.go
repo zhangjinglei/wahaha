@@ -121,6 +121,8 @@ func mapForm(ptr interface{}, form map[string][]string) error {
 
 func setWithProperType(valueKind reflect.Kind, val []string, structField reflect.Value, option tagOptions) error {
 	switch valueKind {
+	case reflect.Ptr:
+		return setWithProperType(structField.Elem().Kind(), val, structField.Elem(),option)
 	case reflect.Int:
 		return setIntField(val[0], 0, structField)
 	case reflect.Int8:
