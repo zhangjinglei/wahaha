@@ -19,7 +19,8 @@ func New() (ws *warden.Server, err error) {
 		return
 	}
 	ws = warden.NewServer(&cfg)
-	//pb.RegisterDemoServer(ws.Server(), svc)
+	s:=&service.Service{}
+	pb.RegisterDemoServer(ws.Server(), s)
 	ws, err = ws.Start()
 	return
 }
