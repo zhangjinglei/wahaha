@@ -15,7 +15,7 @@ type Service struct {
 
 
 //只提供grpc
-func (s *Service) GrpcOnly(context.Context, *emptypb.Empty) (reply *emptypb.Empty, err error){
+func (s *Service) GrpcOnly(context.Context, *empty.Empty) (reply *empty.Empty, err error){
 	reply = new(empty.Empty)
 	return
 }
