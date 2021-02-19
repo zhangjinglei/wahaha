@@ -75,12 +75,12 @@ func GetHTTPInfo(
 		_,ok:=parsePermission.GetPattern().(*permission.HttpRule_Get)
 		if ok{
 			httpMethod = "GET"
-			newPath=parsePermission.GetGet()
+			newPath=strings.TrimSpace(parsePermission.GetGet())
 		}else {
 			_,ok:=parsePermission.GetPattern().(*permission.HttpRule_Post)
 			if ok{
 				httpMethod = "POST"
-				newPath=parsePermission.GetPost()
+				newPath=strings.TrimSpace(parsePermission.GetPost())
 			}
 		}
 		if newPath==""{
