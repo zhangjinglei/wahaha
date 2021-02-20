@@ -157,12 +157,18 @@ func (t *swaggerGen) generateSwagger(file *descriptor.FileDescriptorProto) *plug
 	str := string(b)
 	out.Name = &name
 	//out.Content = &str
-	varname:=naming.GenFileName(file, "swaggerdoc")
+	varname:=naming.GenFileName(file, "")
 	content:="package "+packageName+"\n\n"
 	content+="import bm \"github.com/zhangjinglei/wahaha/pkg/net/http/blademaster\"\n"
-	content+="var "+varname+"=`"+strings.ReplaceAll(str,"`","")+"`\n"
+	content+="var "+varname+"swaggerdoc=`"+strings.ReplaceAll(str,"`","")+"`\n"
 	content+="func Register"+varname+"Swagger(e *bm.Engine){\n"
-	content+=`	e.GET("/`+pkg+`/index.html",bm.SwaggerIndex("a.json"))`+"\n"
+	content+=`	e.GET("/`+pkg+`/swagger/index.html",bm.SwaggerIndex("/`+pkg+`/swagger/doc.json"))`+"\n"
+	content+=`	e.GET("/`+pkg+`/swagger/doc.json",bm.SwaggerDocJson("`+varname+`swaggerdoc"))`+"\n"
+	content+=`	e.GET("/`+pkg+`/swagger/swagger-ui.css",bm.SwaggerStatic)`+"\n"
+	content+=`	e.GET("/`+pkg+`/swagger/swagger-ui-bundle.js",bm.SwaggerStatic)`+"\n"
+	content+=`	e.GET("/`+pkg+`/swagger/swagger-ui-standalone-preset.js",bm.SwaggerStatic)`+"\n"
+	content+=`	e.GET("/`+pkg+`/swagger/favicon-32x32.png",bm.SwaggerStatic)`+"\n"
+	content+=`	e.GET("/`+pkg+`/swagger/favicon-16x16.png",bm.SwaggerStatic)`+"\n"
 	content+="}\n"
 
 	out.Content = &content

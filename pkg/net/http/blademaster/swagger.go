@@ -4,6 +4,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	"github.com/zhangjinglei/wahaha/pkg/ecode"
 	"html/template"
+	"regexp"
 )
 
 // Config stores echoSwagger configuration variables.
@@ -19,48 +20,24 @@ func URL(url string) func(c *Config) {
 	}
 }
 
-func swagger(e *Engine) HandlerFunc {
-	group := e.Group("/swagger")
-	group.GET("/swagger-ui.css")
-	return swaggerHandler
-}
-
-
 
 // EchoWrapHandler wraps `http.Handler` into `echo.HandlerFunc`.
-func swaggerHandler(c *Context)  {
+func SwaggerStatic(c *Context)  {
 
 	handler := swaggerFiles.Handler
-	handler.ServeHTTP(c.Writer, c.Request)
-	config := &Config{
-		URL: "doc.json",
+
+	var re = regexp.MustCompile(`(.*)(index\.html|doc\.json|favicon-16x16\.png|favicon-32x32\.png|/oauth2-redirect\.html|swagger-ui\.css|swagger-ui\.css\.map|swagger-ui\.js|swagger-ui\.js\.map|swagger-ui-bundle\.js|swagger-ui-bundle\.js\.map|swagger-ui-standalone-preset\.js|swagger-ui-standalone-preset\.js\.map)[\?|.]*`)
+	var matches []string
+	if matches = re.FindStringSubmatch(c.Request.RequestURI); len(matches) != 3 {
+
+		c.JSON("404 page not found",ecode.NothingFound)
+		c.Abort()
+		return
 	}
-	//
-	//for _, c := range confs {
-	//	c(config)
-	//}
+	prefix := matches[1]
+	handler.Prefix = prefix
 
-	// create a template with name
-	t := template.New("swagger_index.html")
-	index, _ := t.Parse(indexTempl)
-
-
-
-		switch c.RoutePath {
-		case "index.html":
-
-			index.Execute(c.Writer, config)
-		//case "doc.json":
-		//	open, _ := os.Open("C:\\code\\wzw3\\api\\api.swagger.json")
-		//	defer open.Close()
-		//	content, _ := ioutil.ReadAll(open)
-		//
-		//	//doc, _ := swag.ReadDoc()
-		//	c.Response().Write(content)
-		default:
-			c.JSON(nil,ecode.OK)
-
-		}
+	handler.ServeHTTP(c.Writer, c.Request)
 
 
 }
@@ -77,6 +54,11 @@ func SwaggerIndex(url string)  HandlerFunc{
 		index.Execute(c.Writer, config)
 	}
 
+}
+func SwaggerDocJson(html string) HandlerFunc {
+	return func(c *Context) {
+		c.Writer.Write([]byte(html))
+	}
 }
 
 const indexTempl = `<!-- HTML for static distribution bundle build -->
