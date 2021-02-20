@@ -30,7 +30,7 @@ func (s *Service) SayHello(ctx context.Context, req *pb.HelloReq) (reply *empty.
 // SayHelloURL bm demo func.
 func (s *Service) SayHelloURL(ctx context.Context, req *pb.HelloReq) (reply *pb.HelloResp, err error) {
 	reply = &pb.HelloResp{
-		Content: "hello " + req.Name,
+		Content: req.Name,
 	}
 	fmt.Printf("hello url %s", req.Name)
 	return

@@ -35,8 +35,7 @@ service Demo {
     option (bidewu.http)={
       post:"",
       perm:NeedPerm,
-      app:"demo"
-      permcode:"456"
+      app:"demo",
     };
   };
   //普通方法案例

@@ -18,7 +18,7 @@ import (
 type HTTPInfo struct {
 	App string
 	Permission  permission.Permission
-	PermissionCode string
+	//PermissionCode string
 	HttpMethod   string
 	Path         string
 	LegacyPath   string
@@ -49,7 +49,7 @@ func GetHTTPInfo(
 		newPath          string
 		explicitHTTPPath bool=true
 		perm =permission.Permission_NeedPerm
-		permcode string=""
+		//permcode string=""
 		app=""
 	)
 	comment, _ := reg.MethodComments(file, service, method)
@@ -89,18 +89,20 @@ func GetHTTPInfo(
 			}
 		}
 		if newPath==""{
-			newPath = "/" + file.GetPackage() + "." + service.GetName() + "/" + method.GetName()
+			newPath = "/" + file.GetPackage() + "/" + service.GetName() + "/" + method.GetName()
+		}else {
+			newPath = "/" + file.GetPackage() + "/"+strings.TrimLeft(newPath,"/")
 		}
 
-		//println("================", parsePermission)
-		if parsePermission.GetPerm() == permission.Permission_NeedPerm {
-			if strings.TrimSpace(parsePermission.GetPermcode()) == "" {
-				panic(errors.New("缺少权限码定义permcode:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
-			}
-			if strings.TrimSpace(parsePermission.GetPermgroup()) == "" {
-				panic(errors.New("缺少权限分类permgroup定义:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
-			}
-		}
+		////println("================", parsePermission)
+		//if parsePermission.GetPerm() == permission.Permission_NeedPerm {
+		//	if strings.TrimSpace(parsePermission.GetPermcode()) == "" {
+		//		panic(errors.New("缺少权限码定义permcode:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
+		//	}
+		//	if strings.TrimSpace(parsePermission.GetPermgroup()) == "" {
+		//		panic(errors.New("缺少权限分类permgroup定义:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
+		//	}
+		//}
 		if parsePermission.GetPerm() != permission.Permission_IgnoreLogin{
 			if strings.TrimSpace(parsePermission.GetApp()) == "" {
 				panic(errors.New("缺少适用系统app定义:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
@@ -109,13 +111,13 @@ func GetHTTPInfo(
 
 
 		perm=parsePermission.GetPerm()
-		permcode=strings.TrimSpace(parsePermission.GetPermcode())
+		//permcode=strings.TrimSpace(parsePermission.GetPermcode())
 		if parsePermission.GetPerm()==permission.Permission_IgnoreLogin{
 			title+="✨适用【所有系统】┈┈┈┈┈✅无需登录,无需权限"
 		}else if parsePermission.GetPerm()==permission.Permission_LoginWithNoPermission{
 			title+=`✨适用【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅✔需登录,无需权限`
 		}else {
-			title+=`✨适用【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅权限码:`+permcode
+			title+=`✨适用【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅权限码:`+newPath
 		}
 
 
@@ -129,7 +131,7 @@ func GetHTTPInfo(
 		App:app,
 		HttpMethod: httpMethod,
 		Permission:perm,
-		PermissionCode:permcode,
+		//PermissionCode:permcode,
 		Path:                p,
 		NewPath:             newPath,
 		IsLegacyPath:        false,

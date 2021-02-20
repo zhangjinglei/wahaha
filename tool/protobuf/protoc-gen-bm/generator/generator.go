@@ -166,7 +166,7 @@ func (t *bm) generateBMRoute(
 	}
 	var methList []methodInfo
 	var allMidwareMap = make(map[string]bool)
-	var isLegacyPkg = false
+	//var isLegacyPkg = false
 	for _, method := range service.Method {
 		if !t.ShouldGenForMethod(file, service, method) {
 			continue
@@ -178,7 +178,7 @@ func (t *bm) generateBMRoute(
 			continue
 		}
 		apiInfo := t.GetHttpInfoCached(file, service, method)
-		isLegacyPkg = apiInfo.IsLegacyPath
+		//isLegacyPkg = apiInfo.IsLegacyPath
 		//httpMethod, legacyPath, path := getHttpInfo(file, service, method, t.reg)
 		//if legacyPath != "" {
 		//	isLegacyPkg = true
@@ -229,34 +229,34 @@ func (t *bm) generateBMRoute(
 
 	sort.Strings(midList)
 
-	// 注册老的路由的方法
-	if isLegacyPkg {
-		funcName := `Register` + utils.CamelCase(versionPrefix) + servName + `Service`
-		t.P(`// `, funcName, ` Register the blademaster route with middleware map`)
-		t.P(`// midMap is the middleware map, the key is defined in proto`)
-		t.P(`func `, funcName, `(e *bm.Engine, svc `, servName, "BMServer, midMap map[string]bm.HandlerFunc)", ` {`)
-		var keys []string
-		for m := range allMidwareMap {
-			keys = append(keys, m)
-		}
-		// to keep generated code consistent
-		sort.Strings(keys)
-		for _, m := range keys {
-			t.P(m, ` := midMap["`, m, `"]`)
-		}
-
-		t.P(svcName, ` = svc`)
-		for _, methInfo := range methList {
-			var midArgStr string
-			if len(methInfo.midwares) == 0 {
-				midArgStr = ""
-			} else {
-				midArgStr = strings.Join(methInfo.midwares, ", ") + ", "
-			}
-			t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.LegacyPath, `", `, midArgStr, methInfo.routeFuncName, `)`)
-		}
-		t.P(`	}`)
-	} else {
+	//// 注册老的路由的方法
+	//if isLegacyPkg {
+	//	funcName := `Register` + utils.CamelCase(versionPrefix) + servName + `Service`
+	//	t.P(`// `, funcName, ` Register the blademaster route with middleware map`)
+	//	t.P(`// midMap is the middleware map, the key is defined in proto`)
+	//	t.P(`func `, funcName, `(e *bm.Engine, svc `, servName, "BMServer, midMap map[string]bm.HandlerFunc)", ` {`)
+	//	var keys []string
+	//	for m := range allMidwareMap {
+	//		keys = append(keys, m)
+	//	}
+	//	// to keep generated code consistent
+	//	sort.Strings(keys)
+	//	for _, m := range keys {
+	//		t.P(m, ` := midMap["`, m, `"]`)
+	//	}
+	//
+	//	t.P(svcName, ` = svc`)
+	//	for _, methInfo := range methList {
+	//		var midArgStr string
+	//		if len(methInfo.midwares) == 0 {
+	//			midArgStr = ""
+	//		} else {
+	//			midArgStr = strings.Join(methInfo.midwares, ", ") + ", "
+	//		}
+	//		t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.LegacyPath, `", `, midArgStr, methInfo.routeFuncName, `)`)
+	//	}
+	//	t.P(`	}`)
+	//} else {
 		// 新的注册路由的方法
 		var bmFuncName = fmt.Sprintf("Register%sBMServer", servName)
 		t.P(`// `, bmFuncName, ` Register the blademaster route`)
@@ -271,7 +271,7 @@ func (t *bm) generateBMRoute(
 			//t.P("//zhangjinglei")
 			//t.P(`permission["`+methInfo.apiInfo.NewPath+`"]=[]string{"a","b","c"}`)
 			if methInfo.apiInfo.Permission!=permission.Permission_IgnoreLogin{
-				t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",e.AuthMid("`+methInfo.apiInfo.App+`","`+methInfo.apiInfo.PermissionCode+`"),`, methInfo.routeFuncName, ` )`)
+				t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",e.AuthMid("`+methInfo.apiInfo.App+`","`+methInfo.apiInfo.NewPath+`"),`, methInfo.routeFuncName, ` )`)
 			}else {
 				t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
 			}
@@ -279,7 +279,7 @@ func (t *bm) generateBMRoute(
 
 		}
 		t.P(`	}`)
-	}
+	//}
 }
 
 func (t *bm) hasHeaderTag(md *typemap.MessageDefinition) bool {
