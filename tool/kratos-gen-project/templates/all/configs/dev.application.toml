@@ -1,3 +1,13 @@
+
+# This is a TOML document. Boom~
+demoExpire = "24h"
+[GrpcServer]
+    addr = "0.0.0.0:9000"
+    timeout = "1s"
+[HttpServer]
+    addr = "0.0.0.0:8000"
+    timeout = "1s"
+
 [Client]
 	addr = "127.0.0.1:3306"
 	dsn = "{user}:{password}@tcp(127.0.0.1:3306)/{database}?timeout=1s&readTimeout=1s&writeTimeout=1s&parseTime=true&loc=Local&charset=utf8mb4,utf8"

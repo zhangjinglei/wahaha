@@ -15,10 +15,10 @@ func New() (engine *bm.Engine, err error) {
 		cfg bm.ServerConfig
 		ct paladin.TOML
 	)
-	if err = paladin.Get("http.toml").Unmarshal(&ct); err != nil {
+	if err = paladin.Get("application.toml").Unmarshal(&ct); err != nil {
 		return
 	}
-	if err = ct.Get("Server").UnmarshalTOML(&cfg); err != nil {
+	if err = ct.Get("HttpServer").UnmarshalTOML(&cfg); err != nil {
 		return
 	}
 	engine = bm.DefaultServer(&cfg)

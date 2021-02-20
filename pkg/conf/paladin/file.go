@@ -122,6 +122,10 @@ func NewFile(base string) (Client, error) {
 
 // Get return value by key.
 func (f *file) Get(key string) *Value {
+	getenv := strings.TrimSpace(os.Getenv("online"))
+	if getenv==""{
+		key="dev."+strings.TrimSpace(key)
+	}
 	return f.values.Get(key)
 }
 

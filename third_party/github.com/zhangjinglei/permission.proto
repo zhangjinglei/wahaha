@@ -11,6 +11,14 @@ option java_outer_classname = "BidewuPermission";
 option java_package = "com.bidewu.auth";
 option objc_class_prefix = "BIDEWUAUTH";
 
+extend google.protobuf.ServiceOptions{
+  repeated DataRule datarules=8000;
+}
+
+message DataRule{
+  required string code=1;
+  required string summary=2;
+}
 
 extend google.protobuf.MethodOptions {
   // See `HttpRule`.
