@@ -28,7 +28,10 @@ message HttpRule {
   }
   //权限
   required Permission perm = 3 [default=NeedPerm];//默认值：NeedPerm
+  //权限码
   optional string permcode=4;
+  //权限分类
+  optional string permgroup=6;
   //所属系统
   optional string app=5;
 }

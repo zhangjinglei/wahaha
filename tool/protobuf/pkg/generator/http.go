@@ -74,6 +74,9 @@ func GetHTTPInfo(
 		explicitHTTPPath=false
 	}else {
 		app=parsePermission.GetApp()
+		if parsePermission.GetPerm()==permission.Permission_IgnoreLogin{
+			app=""
+		}
 		_,ok:=parsePermission.GetPattern().(*permission.HttpRule_Get)
 		if ok{
 			httpMethod = "GET"
@@ -94,8 +97,13 @@ func GetHTTPInfo(
 			if strings.TrimSpace(parsePermission.GetPermcode()) == "" {
 				panic(errors.New("缺少权限码定义permcode:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
 			}
+			if strings.TrimSpace(parsePermission.GetPermgroup()) == "" {
+				panic(errors.New("缺少权限分类permgroup定义:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
+			}
+		}
+		if parsePermission.GetPerm() != permission.Permission_IgnoreLogin{
 			if strings.TrimSpace(parsePermission.GetApp()) == "" {
-				panic(errors.New("缺少app定义:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
+				panic(errors.New("缺少适用系统app定义:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
 			}
 		}
 
@@ -103,12 +111,13 @@ func GetHTTPInfo(
 		perm=parsePermission.GetPerm()
 		permcode=strings.TrimSpace(parsePermission.GetPermcode())
 		if parsePermission.GetPerm()==permission.Permission_IgnoreLogin{
-			title+="┈┈┈┈┈✨无需登录,无需权限"
+			title+="✨适用【所有系统】┈┈┈┈┈✅无需登录,无需权限"
 		}else if parsePermission.GetPerm()==permission.Permission_LoginWithNoPermission{
-			title+=`┈┈┈┈┈✔需登录,无需权限`
+			title+=`✨适用【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅✔需登录,无需权限`
 		}else {
-			title+=`┈┈┈┈┈✅权限码:`+permcode
+			title+=`✨适用【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅权限码:`+permcode
 		}
+
 
 	}
 
