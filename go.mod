@@ -48,6 +48,7 @@ require (
 	github.com/sirupsen/logrus v1.5.0
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.6.1
+	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/swag v1.7.0
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20200122045848-3419fae592fc // indirect
 	github.com/tsuna/gohbase v0.0.0-20190502052937-24ffed0537aa

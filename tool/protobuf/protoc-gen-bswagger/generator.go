@@ -67,7 +67,7 @@ func (t *swaggerGen) generateSwagger(file *descriptor.FileDescriptorProto) *plug
 	t.defsMap = map[string]*typemap.MessageDefinition{}
 
 	out := &plugin.CodeGeneratorResponse_File{}
-	name := naming.GenFileName(file, ".swagger.json")
+	name := naming.GenFileName(file, ".swagger.json.go")
 	for _, svc := range file.Service {
 		svc_comments, _ := t.Reg.ServiceComments(file, svc)
 		for _, meth := range svc.Method {
@@ -152,9 +152,15 @@ func (t *swaggerGen) generateSwagger(file *descriptor.FileDescriptorProto) *plug
 		def.Type = "object"
 		defs[typ] = def
 	}
+	packageName, _ := naming.GoPackageName(file)
 	b, _ := json.MarshalIndent(swaggerObj, "", "    ")
 	str := string(b)
 	out.Name = &name
+	out.Content = &str
+	varname:=naming.GenFileName(file, "swaggerdoc")
+	content:="package "+packageName+"\n"
+	str=content+varname+":=`"+strings.ReplaceAll(str,"`","")+"`\n"
+
 	out.Content = &str
 	return out
 }

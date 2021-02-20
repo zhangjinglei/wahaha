@@ -1,6 +1,7 @@
 package blademaster
 
 import (
+	swaggerFiles "github.com/swaggo/files"
 	"github.com/zhangjinglei/wahaha/pkg/ecode"
 	"html/template"
 )
@@ -18,7 +19,9 @@ func URL(url string) func(c *Config) {
 	}
 }
 
-func swagger() HandlerFunc {
+func swagger(e *Engine) HandlerFunc {
+	group := e.Group("/swagger")
+	group.GET("/swagger-ui.css")
 	return swaggerHandler
 }
 
@@ -26,8 +29,8 @@ func swagger() HandlerFunc {
 // EchoWrapHandler wraps `http.Handler` into `echo.HandlerFunc`.
 func swaggerHandler(c *Context)  {
 
-	//handler := swaggerFiles.Handler
-
+	handler := swaggerFiles.Handler
+	handler.ServeHTTP(c.Writer, c.Request)
 	config := &Config{
 		URL: "doc.json",
 	}

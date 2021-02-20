@@ -193,7 +193,6 @@ func NewServer(conf *ServerConfig) *Engine {
 	}
 	engine.RouterGroup.engine = engine
 	// NOTE add prometheus monitor location
-	engine.Group("/swagger",swagger())
 	engine.addRoute("GET", "/metrics", monitor())
 	engine.addRoute("GET", "/metadata", engine.metadata())
 	engine.NoRoute(func(c *Context) {
