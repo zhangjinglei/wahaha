@@ -113,11 +113,11 @@ func GetHTTPInfo(
 		perm=parsePermission.GetPerm()
 		//permcode=strings.TrimSpace(parsePermission.GetPermcode())
 		if parsePermission.GetPerm()==permission.Permission_IgnoreLogin{
-			title+="✨适用【所有系统】┈┈┈┈┈✅无需登录,无需权限"
+			title+="┈┈┈┈┈✨适用系统【所有】┈┈┈┈┈✅无需登录,无需权限"
 		}else if parsePermission.GetPerm()==permission.Permission_LoginWithNoPermission{
-			title+=`✨适用【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅✔需登录,无需权限`
+			title+=`┈┈┈┈┈✨适用系统【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅✔需登录,无需权限`
 		}else {
-			title+=`✨适用【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅权限码:`+newPath
+			title+=`┈┈┈┈┈✨适用系统【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅权限码:`+newPath
 		}
 
 
