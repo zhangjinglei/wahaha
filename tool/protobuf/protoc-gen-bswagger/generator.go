@@ -156,14 +156,137 @@ func (t *swaggerGen) generateSwagger(file *descriptor.FileDescriptorProto) *plug
 	b, _ := json.MarshalIndent(swaggerObj, "", "    ")
 	str := string(b)
 	out.Name = &name
-	out.Content = &str
+	//out.Content = &str
 	varname:=naming.GenFileName(file, "swaggerdoc")
-	content:="package "+packageName+"\n"
-	str=content+varname+":=`"+strings.ReplaceAll(str,"`","")+"`\n"
+	content:="package "+packageName+"\n\n"
+	content+="import bm \"github.com/zhangjinglei/wahaha/pkg/net/http/blademaster\"\n"
+	content+="var "+varname+"=`"+strings.ReplaceAll(str,"`","")+"`\n"
+	content+="func Register"+varname+"Swagger(e *bm.Engine){\n"
+	content+=`	e.GET("/`+pkg+`/index.html",bm.SwaggerIndex("a.json"))`+"\n"
+	content+="}\n"
 
-	out.Content = &str
+	out.Content = &content
 	return out
 }
+
+//func (t *swaggerGen) generateSwagger(file *descriptor.FileDescriptorProto) *plugin.CodeGeneratorResponse_File {
+//	var pkg = file.GetPackage()
+//	r := regexp.MustCompile("v(\\d+)$")
+//	strs := r.FindStringSubmatch(pkg)
+//	var vStr string
+//	if len(strs) >= 2 {
+//		vStr = strs[1]
+//	} else {
+//		vStr = ""
+//	}
+//	var swaggerObj = &swaggerObject{
+//		Paths:   swaggerPathsObject{},
+//		Swagger: "2.0",
+//		Info: swaggerInfoObject{
+//			Title:   file.GetName(),
+//			Version: vStr,
+//		},
+//		Schemes:  []string{"http", "https"},
+//		Consumes: []string{"application/json", "multipart/form-data"},
+//		Produces: []string{"application/json"},
+//	}
+//	t.defsMap = map[string]*typemap.MessageDefinition{}
+//
+//	out := &plugin.CodeGeneratorResponse_File{}
+//	name := naming.GenFileName(file, ".swagger.json")
+//	for _, svc := range file.Service {
+//		svc_comments, _ := t.Reg.ServiceComments(file, svc)
+//		for _, meth := range svc.Method {
+//			if !t.ShouldGenForMethod(file, svc, meth) {
+//				continue
+//			}
+//			apiInfo := t.GetHttpInfoCached(file, svc, meth)
+//			pathItem := swaggerPathItemObject{}
+//			if originPathItem, ok := swaggerObj.Paths[apiInfo.Path]; ok {
+//				pathItem = originPathItem
+//			}
+//			op := t.getOperationByHTTPMethod(apiInfo.HttpMethod, &pathItem)
+//			op.Summary = apiInfo.Title
+//			op.Description = apiInfo.Description
+//			swaggerObj.Paths[apiInfo.Path] = pathItem
+//
+//			op.Tags = []string{pkg + "." + svc.GetName()+"  "+svc_comments.Leading}
+//
+//			// request
+//			request := t.Reg.MessageDefinition(meth.GetInputType())
+//			// request cannot represent by simple form
+//			isComplexRequest := false
+//			for _, field := range request.Descriptor.Field {
+//				if !generator.IsScalar(field) {
+//					isComplexRequest = true
+//					break
+//				}
+//			}
+//			if !isComplexRequest && apiInfo.HttpMethod == "GET" {
+//				for _, field := range request.Descriptor.Field {
+//					if !generator.IsScalar(field) {
+//						continue
+//					}
+//					p := t.getQueryParameter(file, request, field)
+//					op.Parameters = append(op.Parameters, p)
+//				}
+//			} else {
+//				p := swaggerParameterObject{}
+//				p.In = "body"
+//				p.Required = true
+//				p.Name = "body"
+//				p.Schema = &swaggerSchemaObject{}
+//				p.Schema.Ref = "#/definitions/" + meth.GetInputType()
+//				op.Parameters = []swaggerParameterObject{p}
+//			}
+//
+//			// response
+//			resp := swaggerResponseObject{}
+//			resp.Description = "A successful response."
+//
+//			// proto 里面的response只定义data里面的
+//			// 所以需要把code msg data 这一级加上
+//			resp.Schema.Type = "object"
+//			resp.Schema.Properties = &swaggerSchemaObjectProperties{}
+//			p := keyVal{Key: "code", Value: &schemaCore{Type: "integer"}}
+//			*resp.Schema.Properties = append(*resp.Schema.Properties, p)
+//			p = keyVal{Key: "message", Value: &schemaCore{Type: "string"}}
+//			*resp.Schema.Properties = append(*resp.Schema.Properties, p)
+//			p = keyVal{Key: "data", Value: schemaCore{Ref: "#/definitions/" + meth.GetOutputType()}}
+//			*resp.Schema.Properties = append(*resp.Schema.Properties, p)
+//			op.Responses = swaggerResponsesObject{"200": resp}
+//		}
+//	}
+//
+//	// walk though definitions
+//	t.walkThroughFileDefinition(file)
+//	defs := swaggerDefinitionsObject{}
+//	swaggerObj.Definitions = defs
+//	for typ, msg := range t.defsMap {
+//		def := swaggerSchemaObject{}
+//		def.Properties = new(swaggerSchemaObjectProperties)
+//		def.Description = strings.Trim(msg.Comments.Leading, "\n\r ")
+//		for _, field := range msg.Descriptor.Field {
+//			p := keyVal{Key: generator.GetFormOrJSONName(field)}
+//			schema := t.schemaForField(file, msg, field)
+//			if generator.GetFieldRequired(field, t.Reg, msg) {
+//				def.Required = append(def.Required, p.Key)
+//			}
+//			p.Value = schema
+//			*def.Properties = append(*def.Properties, p)
+//		}
+//		def.Type = "object"
+//		defs[typ] = def
+//	}
+//	packageName, _ := naming.GoPackageName(file)
+//	b, _ := json.MarshalIndent(swaggerObj, "", "    ")
+//	str := string(b)
+//	out.Name = &name
+//	out.Content = &str
+
+//	out.Content = &str
+//	return out
+//}
 
 func (t *swaggerGen) getOperationByHTTPMethod(httpMethod string, pathItem *swaggerPathItemObject) *swaggerOperationObject {
 	var op = &swaggerOperationObject{}

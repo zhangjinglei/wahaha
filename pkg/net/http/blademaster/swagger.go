@@ -26,6 +26,7 @@ func swagger(e *Engine) HandlerFunc {
 }
 
 
+
 // EchoWrapHandler wraps `http.Handler` into `echo.HandlerFunc`.
 func swaggerHandler(c *Context)  {
 
@@ -61,6 +62,20 @@ func swaggerHandler(c *Context)  {
 
 		}
 
+
+}
+
+
+// EchoWrapHandler wraps `http.Handler` into `echo.HandlerFunc`.
+func SwaggerIndex(url string)  HandlerFunc{
+	return func(c *Context) {
+		config := &Config{
+			URL: url,
+		}
+		t := template.New("swagger_index.html")
+		index, _ := t.Parse(indexTempl)
+		index.Execute(c.Writer, config)
+	}
 
 }
 
