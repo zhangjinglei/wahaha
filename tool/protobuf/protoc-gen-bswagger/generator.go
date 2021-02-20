@@ -163,7 +163,7 @@ func (t *swaggerGen) generateSwagger(file *descriptor.FileDescriptorProto) *plug
 	content+="var "+varname+"swaggerdoc=`"+strings.ReplaceAll(str,"`","")+"`\n"
 	content+="func Register"+varname+"Swagger(e *bm.Engine){\n"
 	content+=`	e.GET("/`+pkg+`/swagger/index.html",bm.SwaggerIndex("/`+pkg+`/swagger/doc.json"))`+"\n"
-	content+=`	e.GET("/`+pkg+`/swagger/doc.json",bm.SwaggerDocJson("`+varname+`swaggerdoc"))`+"\n"
+	content+=`	e.GET("/`+pkg+`/swagger/doc.json",bm.SwaggerDocJson(`+varname+`swaggerdoc))`+"\n"
 	content+=`	e.GET("/`+pkg+`/swagger/swagger-ui.css",bm.SwaggerStatic)`+"\n"
 	content+=`	e.GET("/`+pkg+`/swagger/swagger-ui-bundle.js",bm.SwaggerStatic)`+"\n"
 	content+=`	e.GET("/`+pkg+`/swagger/swagger-ui-standalone-preset.js",bm.SwaggerStatic)`+"\n"
