@@ -59,12 +59,13 @@ func GetHTTPInfo(
 	cleanComments := tag.GetCommentWithoutTag(comment.Leading)
 	if len(cleanComments) > 0 {
 		title = strings.Trim(cleanComments[0], "\n\r ")
-		if len(cleanComments) > 1 {
-			descLines := cleanComments[1:]
-			desc = strings.Trim(strings.Join(descLines, "\n"), "\r\n ")
-		} else {
-			desc = ""
-		}
+		desc = title
+		//if len(cleanComments) > 1 {
+		//	descLines := cleanComments[1:]
+		//	desc = strings.Trim(strings.Join(descLines, "\n"), "\r\n ")
+		//} else {
+		//	desc = ""
+		//}
 	} else {
 		title = ""
 	}
