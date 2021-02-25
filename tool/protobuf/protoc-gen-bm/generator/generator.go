@@ -2,19 +2,19 @@ package generator
 
 import (
 	"fmt"
-	"github.com/zhangjinglei/wahaha/tool/protobuf/pkg/extensions/permission"
 	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 
+	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 	"github.com/zhangjinglei/wahaha/tool/protobuf/pkg/generator"
 	"github.com/zhangjinglei/wahaha/tool/protobuf/pkg/naming"
 	"github.com/zhangjinglei/wahaha/tool/protobuf/pkg/tag"
 	"github.com/zhangjinglei/wahaha/tool/protobuf/pkg/typemap"
 	"github.com/zhangjinglei/wahaha/tool/protobuf/pkg/utils"
-	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	plugin "github.com/golang/protobuf/protoc-gen-go/plugin"
 )
 
 type bm struct {
@@ -257,28 +257,35 @@ func (t *bm) generateBMRoute(
 	//	}
 	//	t.P(`	}`)
 	//} else {
-		// 新的注册路由的方法
-		var bmFuncName = fmt.Sprintf("Register%sBMServer", servName)
-		t.P(`// `, bmFuncName, ` Register the blademaster route`)
-		t.P(`func `, bmFuncName, `(e *bm.Engine, server `, servName, `BMServer) {`)
-		t.P(svcName, ` = server`)
-		for _, methInfo := range methList {
-			//comments, _ := t.Reg.MethodComments(file, service, methInfo)
-			//tags := tag.GetTagsInComment(comments.Leading)
-			//if tag.GetTagValue("dynamic", tags) == "true" {
-			//	continue
-			//}
-			//t.P("//zhangjinglei")
-			//t.P(`permission["`+methInfo.apiInfo.NewPath+`"]=[]string{"a","b","c"}`)
-			if methInfo.apiInfo.Permission!=permission.Permission_IgnoreLogin{
-				t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",e.AuthMid("`+methInfo.apiInfo.App+`","`+methInfo.apiInfo.NewPath+`"),`, methInfo.routeFuncName, ` )`)
-			}else {
-				t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
-			}
+	// 新的注册路由的方法
+	var bmFuncName = fmt.Sprintf("Register%sBMServer", servName)
+	t.P(`// `, bmFuncName, ` Register the blademaster route`)
+	t.P(`func `, bmFuncName, `(e *bm.Engine, server `, servName, `BMServer) {`)
+	t.P(svcName, ` = server`)
+	for _, methInfo := range methList {
+		//comments, _ := t.Reg.MethodComments(file, service, methInfo)
+		//tags := tag.GetTagsInComment(comments.Leading)
+		//if tag.GetTagValue("dynamic", tags) == "true" {
+		//	continue
+		//}
+		//t.P("//zhangjinglei")
+		//t.P(`permission["`+methInfo.apiInfo.NewPath+`"]=[]string{"a","b","c"}`)
+		//if methInfo.apiInfo.Permission!=permission.Permission_IgnoreLogin{
+		//	t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",e.AuthMid("`+methInfo.apiInfo.App+`","`+methInfo.apiInfo.NewPath+`"),`, methInfo.routeFuncName, ` )`)
+		//}else {
+		//	t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
+		//}
+		description := strings.ReplaceAll(methInfo.apiInfo.Description, `"`, "")
+		description = strings.ReplaceAll(description, "\r", "")
+		description = strings.ReplaceAll(description, "\n", "")
+		svcdescription := strings.ReplaceAll(methInfo.apiInfo.ServiceDescription, `"`, "")
+		svcdescription = strings.ReplaceAll(svcdescription, "\r", "")
+		svcdescription = strings.ReplaceAll(svcdescription, "\n", "")
+		t.P(`e.AuthMid("`+methInfo.apiInfo.App+`","`, methInfo.apiInfo.NewPath, `",`, strconv.Itoa(int(methInfo.apiInfo.Permission)), `,"`+description+`"`, `,"`+methInfo.apiInfo.PackageServiceName+`"`, `,"`+svcdescription+`"`, ` )`)
+		t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
 
-
-		}
-		t.P(`	}`)
+	}
+	t.P(`	}`)
 	//}
 }
 

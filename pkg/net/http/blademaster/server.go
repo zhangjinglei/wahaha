@@ -151,9 +151,29 @@ type Engine struct {
 	allNoMethod []HandlerFunc
 	noRoute     []HandlerFunc
 	noMethod    []HandlerFunc
-	AuthMid func(app string,permcode string)HandlerFunc
+
+	AuthStore []authmeta
 
 	pool sync.Pool
+}
+
+func (engine *Engine) authmetadata() HandlerFunc {
+	return func(c *Context) {
+		c.JSON(engine.AuthStore, nil)
+	}
+}
+
+func (e *Engine) AuthMid(app string, path string, perm int32, description string, packageservicename string, servicedescription string) {
+	e.AuthStore = append(e.AuthStore, authmeta{App: app, Path: path, Perm: perm, Description: description, PkgSvcName: packageservicename, SvcDes: servicedescription})
+}
+
+type authmeta struct {
+	App         string `json:"app"`
+	Path        string `json:"path"`
+	Perm        int32  `json:"perm"`
+	Description string `json:"description"`
+	PkgSvcName  string `json:"pkg_svc_name"`
+	SvcDes      string `json:"svc_des"`
 }
 
 type injection struct {
@@ -181,9 +201,6 @@ func NewServer(conf *ServerConfig) *Engine {
 		methodConfigs:          make(map[string]*MethodConfig),
 		HandleMethodNotAllowed: true,
 		injections:             make([]injection, 0),
-		AuthMid: func(app string,permcode string) HandlerFunc {
-			return func(c *Context){ }
-		},
 	}
 	if err := engine.SetConfig(conf); err != nil {
 		panic(err)
@@ -192,7 +209,8 @@ func NewServer(conf *ServerConfig) *Engine {
 		return engine.newContext()
 	}
 	engine.RouterGroup.engine = engine
-	// NOTE add prometheus monitor location
+	// NOTE add prometheus monitor location authmetadata
+	engine.addRoute("GET", "/authmetadata", engine.authmetadata())
 	engine.addRoute("GET", "/metrics", monitor())
 	engine.addRoute("GET", "/metadata", engine.metadata())
 	engine.NoRoute(func(c *Context) {
@@ -519,5 +537,3 @@ func (engine *Engine) rebuild404Handlers() {
 func (engine *Engine) rebuild405Handlers() {
 	engine.allNoMethod = engine.combineHandlers(engine.noMethod)
 }
-
-

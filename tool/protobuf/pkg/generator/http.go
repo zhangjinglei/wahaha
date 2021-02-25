@@ -16,8 +16,8 @@ import (
 
 // HTTPInfo http info for method
 type HTTPInfo struct {
-	App string
-	Permission  permission.Permission
+	App        string
+	Permission permission.Permission
 	//PermissionCode string
 	HttpMethod   string
 	Path         string
@@ -28,6 +28,8 @@ type HTTPInfo struct {
 	Description  string
 	// is http path added in the google.api.http option ?
 	HasExplicitHTTPPath bool
+	PackageServiceName  string
+	ServiceDescription  string
 }
 
 type googleMethodOptionInfo struct {
@@ -47,10 +49,10 @@ func GetHTTPInfo(
 		desc             string
 		httpMethod       string
 		newPath          string
-		explicitHTTPPath bool=true
-		perm =permission.Permission_NeedPerm
+		explicitHTTPPath bool = true
+		perm                  = permission.Permission_NeedPerm
 		//permcode string=""
-		app=""
+		app = ""
 	)
 	comment, _ := reg.MethodComments(file, service, method)
 	//tags := tag.GetTagsInComment(comment.Leading)
@@ -68,30 +70,30 @@ func GetHTTPInfo(
 	}
 
 	parsePermission, err2 := ParsePermission(method)
-	if err2!=nil {
+	if err2 != nil {
 		//没有定义http扩展
 		//不生成http接口
-		explicitHTTPPath=false
-	}else {
-		app=parsePermission.GetApp()
-		if parsePermission.GetPerm()==permission.Permission_IgnoreLogin{
-			app=""
+		explicitHTTPPath = false
+	} else {
+		app = parsePermission.GetApp()
+		if parsePermission.GetPerm() == permission.Permission_IgnoreLogin {
+			app = ""
 		}
-		_,ok:=parsePermission.GetPattern().(*permission.HttpRule_Get)
-		if ok{
+		_, ok := parsePermission.GetPattern().(*permission.HttpRule_Get)
+		if ok {
 			httpMethod = "GET"
-			newPath=strings.TrimSpace(parsePermission.GetGet())
-		}else {
-			_,ok:=parsePermission.GetPattern().(*permission.HttpRule_Post)
-			if ok{
+			newPath = strings.TrimSpace(parsePermission.GetGet())
+		} else {
+			_, ok := parsePermission.GetPattern().(*permission.HttpRule_Post)
+			if ok {
 				httpMethod = "POST"
-				newPath=strings.TrimSpace(parsePermission.GetPost())
+				newPath = strings.TrimSpace(parsePermission.GetPost())
 			}
 		}
-		if newPath==""{
+		if newPath == "" {
 			newPath = "/" + file.GetPackage() + "/" + service.GetName() + "/" + method.GetName()
-		}else {
-			newPath = "/" + file.GetPackage() + "/"+strings.TrimLeft(newPath,"/")
+		} else {
+			newPath = "/" + file.GetPackage() + "/" + strings.TrimLeft(newPath, "/")
 		}
 
 		////println("================", parsePermission)
@@ -103,34 +105,32 @@ func GetHTTPInfo(
 		//		panic(errors.New("缺少权限分类permgroup定义:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
 		//	}
 		//}
-		if parsePermission.GetPerm() != permission.Permission_IgnoreLogin{
+		if parsePermission.GetPerm() != permission.Permission_IgnoreLogin {
 			if strings.TrimSpace(parsePermission.GetApp()) == "" {
-				panic(errors.New("缺少适用系统app定义:"+file.GetName()+"=>"+service.GetName() + "." + method.GetName() ))
+				panic(errors.New("缺少适用系统app定义:" + file.GetName() + "=>" + service.GetName() + "." + method.GetName()))
 			}
 		}
 
-
-		perm=parsePermission.GetPerm()
+		perm = parsePermission.GetPerm()
 		//permcode=strings.TrimSpace(parsePermission.GetPermcode())
-		if parsePermission.GetPerm()==permission.Permission_IgnoreLogin{
-			title+="┈┈┈┈┈✨适用系统【所有】┈┈┈┈┈✅无需登录,无需权限"
-		}else if parsePermission.GetPerm()==permission.Permission_LoginWithNoPermission{
-			title+=`┈┈┈┈┈✨适用系统【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅✔需登录,无需权限`
-		}else {
-			title+=`┈┈┈┈┈✨适用系统【`+parsePermission.GetApp()+`】`+`┈┈┈┈┈✅权限码:`+newPath
+		if parsePermission.GetPerm() == permission.Permission_IgnoreLogin {
+			title += "┈┈┈┈┈✨适用系统【所有】┈┈┈┈┈✅无需登录,无需权限"
+		} else if parsePermission.GetPerm() == permission.Permission_LoginWithNoPermission {
+			title += `┈┈┈┈┈✨适用系统【` + parsePermission.GetApp() + `】` + `┈┈┈┈┈✅✔需登录,无需权限`
+		} else {
+			title += `┈┈┈┈┈✨适用系统【` + parsePermission.GetApp() + `】` + `┈┈┈┈┈✅权限码:` + newPath
 		}
-
 
 	}
 
-
-
-//END:
+	svccomments, _ := reg.ServiceComments(file, service)
+	packageservicename := "/" + file.GetPackage() + "/" + service.GetName()
+	//END:
 	var p = newPath
 	param := &HTTPInfo{
-		App:app,
+		App:        app,
 		HttpMethod: httpMethod,
-		Permission:perm,
+		Permission: perm,
 		//PermissionCode:permcode,
 		Path:                p,
 		NewPath:             newPath,
@@ -138,6 +138,8 @@ func GetHTTPInfo(
 		Title:               title,
 		Description:         desc,
 		HasExplicitHTTPPath: explicitHTTPPath,
+		PackageServiceName:  packageservicename,
+		ServiceDescription:  svccomments.Leading,
 	}
 	if title == "" {
 		param.Title = param.Path
@@ -159,11 +161,11 @@ func (t *Base) GetHttpInfoCached(file *descriptor.FileDescriptorProto,
 
 func ParsePermission(method *descriptor.MethodDescriptorProto) (*permission.HttpRule, error) {
 	ext, err := proto.GetExtension(method.GetOptions(), permission.E_Http)
-	if err!=nil{
-		return nil,err
+	if err != nil {
+		return nil, err
 	}
 	rule := ext.(*permission.HttpRule)
-	return rule,nil
+	return rule, nil
 }
 
 // ParseBMMethod parse BMMethodDescriptor form method descriptor proto
