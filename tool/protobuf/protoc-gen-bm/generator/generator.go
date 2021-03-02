@@ -275,6 +275,11 @@ func (t *bm) generateBMRoute(
 		//}else {
 		//	t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
 		//}
+
+		t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
+
+	}
+	for _, methInfo := range methList {
 		description := strings.ReplaceAll(methInfo.apiInfo.Description, `"`, "")
 		description = strings.ReplaceAll(description, "\r", "")
 		description = strings.ReplaceAll(description, "\n", "")
@@ -282,8 +287,6 @@ func (t *bm) generateBMRoute(
 		svcdescription = strings.ReplaceAll(svcdescription, "\r", "")
 		svcdescription = strings.ReplaceAll(svcdescription, "\n", "")
 		t.P(`e.AuthMid("`+methInfo.apiInfo.App+`","`, methInfo.apiInfo.NewPath, `",`, strconv.Itoa(int(methInfo.apiInfo.Permission)), `,"`+description+`"`, `,"`+methInfo.apiInfo.PackageServiceName+`"`, `,"`+svcdescription+`"`, ` )`)
-		t.P(`e.`, methInfo.apiInfo.HttpMethod, `("`, methInfo.apiInfo.NewPath, `",`, methInfo.routeFuncName, ` )`)
-
 	}
 	t.P(`	}`)
 	//}
