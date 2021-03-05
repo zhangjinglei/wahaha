@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	_getBMGen = "go get -u github.com/zhangjinglei/wahaha/tool/protobuf/protoc-gen-bm"
+	_getBMGen = "go get -u github.com/zhangjinglei/wahaha/tool/protobuf/protoc-gen-bm@" + Version
 	_bmProtoc = "protoc --proto_path=%s --proto_path=%s --proto_path=%s --bm_out=:."
 )
 

@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	_getSwaggerGen = "go get -u github.com/zhangjinglei/wahaha/tool/protobuf/protoc-gen-bswagger"
+	_getSwaggerGen = "go get -u github.com/zhangjinglei/wahaha/tool/protobuf/protoc-gen-bswagger@" + Version
 	_swaggerProtoc = "protoc --proto_path=%s --proto_path=%s --proto_path=%s --bswagger_out=:."
 )
 

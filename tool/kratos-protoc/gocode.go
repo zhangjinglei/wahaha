@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	_getGoGen = "go get -u google.golang.org/protobuf/cmd/protoc-gen-go"
+	_getGoGen = "go get -u google.golang.org/protobuf/cmd/protoc-gen-go@" + Version
 )
 
 func installGenGo() error {
@@ -16,4 +16,3 @@ func installGenGo() error {
 	}
 	return nil
 }
-
