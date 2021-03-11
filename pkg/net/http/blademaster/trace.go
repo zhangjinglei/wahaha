@@ -25,7 +25,8 @@ func Trace() HandlerFunc {
 		//// business tag
 		//t.SetTag(trace.String("caller", metadata.String(c.Context, metadata.Caller)))
 		// export trace id to user.
-		xrequestid := c.Request.Header.Get("x-request-id")
+
+		xrequestid := c.Request.Header.Get("x-b3-traceid")
 		if xrequestid != "" {
 			c.Writer.Header().Set(trace.KratosTraceID, xrequestid)
 		}
