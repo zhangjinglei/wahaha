@@ -20,18 +20,18 @@ func main() {
 			Action:          runNew,
 			SkipFlagParsing: true,
 		},
-		{
-			Name:    "build",
-			Aliases: []string{"b"},
-			Usage:   "kratos build",
-			Action:  buildAction,
-		},
-		{
-			Name:    "run",
-			Aliases: []string{"r"},
-			Usage:   "kratos run",
-			Action:  runAction,
-		},
+		//{
+		//	Name:    "build",
+		//	Aliases: []string{"b"},
+		//	Usage:   "kratos build",
+		//	Action:  buildAction,
+		//},
+		//{
+		//	Name:    "run",
+		//	Aliases: []string{"r"},
+		//	Usage:   "kratos run",
+		//	Action:  runAction,
+		//},
 		{
 			Name:            "tool",
 			Aliases:         []string{"t"},
@@ -48,11 +48,11 @@ func main() {
 				return nil
 			},
 		},
-		{
-			Name:   "self-upgrade",
-			Usage:  "kratos self-upgrade",
-			Action: upgradeAction,
-		},
+		//{
+		//	Name:   "self-upgrade",
+		//	Usage:  "kratos self-upgrade",
+		//	Action: upgradeAction,
+		//},
 	}
 	err := app.Run(os.Args)
 	if err != nil {

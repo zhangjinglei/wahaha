@@ -104,10 +104,10 @@ func checkInstall(name string) (err error) {
 	return fmt.Errorf("找不到%s", name)
 }
 
-func upgradeAction(c *cli.Context) error {
-	install("kratos")
-	return nil
-}
+//func upgradeAction(c *cli.Context) error {
+//	install("kratos")
+//	return nil
+//}
 
 func install(name string) {
 	if name == "" {

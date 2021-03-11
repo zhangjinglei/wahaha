@@ -22,24 +22,7 @@ var toolIndexs = []*Tool{
 		Platform:  []string{"darwin", "linux", "windows"},
 		Author:    "kratos",
 	},
-	//{ //不需要genbts工具 张晶磊
-	//	Name:      "genbts",
-	//	Alias:     "kratos-gen-bts",
-	//	BuildTime: time.Date(2020, 3, 31, 0, 0, 0, 0, time.Local),
-	//	Install:   "go get -u github.com/zhangjinglei/wahaha/tool/kratos-gen-bts@" + Version,
-	//	Summary:   "缓存回源逻辑代码生成器",
-	//	Platform:  []string{"darwin", "linux", "windows"},
-	//	Author:    "kratos",
-	//},
-	//{
-	//	Name:      "genmc",
-	//	Alias:     "kratos-gen-mc",
-	//	BuildTime: time.Date(2020, 3, 31, 0, 0, 0, 0, time.Local),
-	//	Install:   "go get -u github.com/zhangjinglei/wahaha/tool/kratos-gen-mc@" + Version,
-	//	Summary:   "mc缓存代码生成",
-	//	Platform:  []string{"darwin", "linux", "windows"},
-	//	Author:    "kratos",
-	//},
+
 	{
 		Name:         "genproject",
 		Alias:        "kratos-gen-project",
@@ -49,24 +32,7 @@ var toolIndexs = []*Tool{
 		Hidden:       true,
 		Requirements: []string{"wire"},
 	},
-	//{ // 不需要单元测试工具  张晶磊
-	//	Name:      "testgen",
-	//	Alias:     "testgen",
-	//	BuildTime: time.Date(2020, 3, 31, 0, 0, 0, 0, time.Local),
-	//	Install:   "go get -u github.com/zhangjinglei/wahaha/tool/testgen@" + Version,
-	//	Summary:   "测试代码生成",
-	//	Platform:  []string{"darwin", "linux", "windows"},
-	//	Author:    "kratos",
-	//},
-	//{
-	//	Name:      "testcli",
-	//	Alias:     "testcli",
-	//	BuildTime: time.Date(2020, 3, 31, 0, 0, 0, 0, time.Local),
-	//	Install:   "go get -u github.com/zhangjinglei/wahaha/tool/testcli@" + Version,
-	//	Summary:   "测试代码运行",
-	//	Platform:  []string{"darwin", "linux", "windows"},
-	//	Author:    "kratos",
-	//},
+
 	//  third party
 	{
 		Name:      "wire",
