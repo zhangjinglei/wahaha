@@ -68,4 +68,5 @@ require (
 	gopkg.in/go-playground/validator.v9 v9.29.1
 	gopkg.in/yaml.v2 v2.3.0
 	sigs.k8s.io/yaml v1.2.0 // indirect
+	github.com/tidwall/gjson v1.6.8
 )

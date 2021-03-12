@@ -30,6 +30,7 @@ import (
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/reflection"
 )
+
 var _grpcTarget flagvar.StringVars
 var (
 	_grpcDSN        string
@@ -188,7 +189,7 @@ func NewServer(conf *ServerConfig, opt ...grpc.ServerOption) (s *Server) {
 	})
 	opt = append(opt, keepParam, grpc.UnaryInterceptor(s.interceptor))
 	s.server = grpc.NewServer(opt...)
-	s.Use(s.recovery(), s.handle(), serverLogging(conf.LogFlag), s.stats(), s.validate())
+	s.Use(s.recovery(), s.handle(), serverLogging(conf.LogFlag), s.stats(), s.validate(), GrpcAuthMiddleWare())
 	s.Use(ratelimiter.New(nil).Limit())
 	return
 }
