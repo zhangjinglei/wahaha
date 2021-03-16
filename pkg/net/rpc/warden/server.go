@@ -15,7 +15,6 @@ import (
 	"github.com/zhangjinglei/wahaha/pkg/log"
 	nmd "github.com/zhangjinglei/wahaha/pkg/net/metadata"
 	"github.com/zhangjinglei/wahaha/pkg/net/rpc/warden/ratelimiter"
-	"github.com/zhangjinglei/wahaha/pkg/net/trace"
 	xtime "github.com/zhangjinglei/wahaha/pkg/time"
 
 	//this package is for json format response
@@ -27,7 +26,6 @@ import (
 	_ "google.golang.org/grpc/encoding/gzip" // NOTE: use grpc gzip by header grpc-accept-encoding
 	"google.golang.org/grpc/keepalive"
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -88,7 +86,7 @@ func (s *Server) handle() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, args *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
 		var (
 			cancel func()
-			addr   string
+			//addr   string
 		)
 		s.mutex.RLock()
 		conf := s.conf
@@ -109,32 +107,47 @@ func (s *Server) handle() grpc.UnaryServerInterceptor {
 		ctx, cancel = context.WithTimeout(ctx, timeout)
 		defer cancel()
 
-		// get grpc metadata(trace & remote_ip & color)
-		var t trace.Trace
 		cmd := nmd.MD{}
 		if gmd, ok := metadata.FromIncomingContext(ctx); ok {
-			t, _ = trace.Extract(trace.GRPCFormat, gmd)
-			for key, vals := range gmd {
-				if nmd.IsIncomingKey(key) {
-					cmd[key] = vals[0]
+			xRequestId := gmd.Get("x-request-id")
+			if xRequestId != nil && len(xRequestId) > 0 {
+				for _, headername := range nmd.Incomingheaders {
+					existheader := gmd.Get(headername)
+					if existheader != nil {
+						cmd[headername] = existheader
+					}
 				}
+
 			}
-		}
-		if t == nil {
-			t = trace.New(args.FullMethod)
-		} else {
-			t.SetTitle(args.FullMethod)
+
 		}
 
-		if pr, ok := peer.FromContext(ctx); ok {
-			addr = pr.Addr.String()
-			t.SetTag(trace.String(trace.TagAddress, addr))
-		}
-		defer t.Finish(&err)
+		// get grpc metadata(trace & remote_ip & color)
+		//var t trace.Trace
+		//cmd := nmd.MD{}
+		//if gmd, ok := metadata.FromIncomingContext(ctx); ok {
+		//	t, _ = trace.Extract(trace.GRPCFormat, gmd)
+		//	for key, vals := range gmd {
+		//		if nmd.IsIncomingKey(key) {
+		//			cmd[key] = vals[0]
+		//		}
+		//	}
+		//}
+		//if t == nil {
+		//	t = trace.New(args.FullMethod)
+		//} else {
+		//	t.SetTitle(args.FullMethod)
+		//}
+
+		//if pr, ok := peer.FromContext(ctx); ok {
+		//	addr = pr.Addr.String()
+		//t.SetTag(trace.String(trace.TagAddress, addr))
+		//}
+		//defer t.Finish(&err)
 
 		// use common meta data context instead of grpc context
 		ctx = nmd.NewContext(ctx, cmd)
-		ctx = trace.NewContext(ctx, t)
+		//ctx = trace.NewContext(ctx, t)
 
 		resp, err = handler(ctx, req)
 		return resp, status.FromError(err).Err()

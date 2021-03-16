@@ -76,6 +76,36 @@ func FromContext(ctx context.Context) (md MD, ok bool) {
 	return
 }
 
+//http server从请求中获取向外传递的链路追踪信息
+func GetHttpTrace(ctx context.Context) map[string]string {
+	m := make(map[string]string)
+	fromContext, ok := FromContext(ctx)
+	if ok {
+		for _, v := range Incomingheaders {
+			i, exist := fromContext[v]
+			if exist {
+				m[v] = i.(string)
+			}
+		}
+	}
+	return m
+}
+
+//grpc server从请求中获取向外传递的链路追踪信息
+func GetGrpcTrace(ctx context.Context) []string {
+	m := make([]string, 0)
+	fromContext, ok := FromContext(ctx)
+	if ok {
+		for _, v := range Incomingheaders {
+			i, exist := fromContext[v]
+			if exist {
+				m = append(m, v, i.(string))
+			}
+		}
+	}
+	return m
+}
+
 // String get string value from metadata in context
 func String(ctx context.Context, key string) string {
 	md, ok := ctx.Value(mdKey{}).(MD)

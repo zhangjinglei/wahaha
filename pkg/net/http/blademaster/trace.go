@@ -1,6 +1,9 @@
 package blademaster
 
-import "github.com/zhangjinglei/wahaha/pkg/net/trace"
+import (
+	nmd "github.com/zhangjinglei/wahaha/pkg/net/metadata"
+	"github.com/zhangjinglei/wahaha/pkg/net/trace"
+)
 
 const _defaultComponentName = "net/http"
 
@@ -25,6 +28,16 @@ func Trace() HandlerFunc {
 		//// business tag
 		//t.SetTag(trace.String("caller", metadata.String(c.Context, metadata.Caller)))
 		// export trace id to user.
+		fromContext, ok := nmd.FromContext(c)
+		if ok {
+			for _, headername := range nmd.Incomingheaders {
+				existheader := c.Request.Header.Get(headername)
+				if existheader != "" {
+					fromContext[headername] = existheader
+				}
+
+			}
+		}
 
 		xrequestid := c.Request.Header.Get("x-b3-traceid")
 		if xrequestid != "" {
