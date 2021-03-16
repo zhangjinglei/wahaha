@@ -2,7 +2,6 @@ package blademaster
 
 import (
 	nmd "github.com/zhangjinglei/wahaha/pkg/net/metadata"
-	"github.com/zhangjinglei/wahaha/pkg/net/trace"
 )
 
 const _defaultComponentName = "net/http"
@@ -41,7 +40,7 @@ func Trace() HandlerFunc {
 
 		xrequestid := c.Request.Header.Get("x-b3-traceid")
 		if xrequestid != "" {
-			c.Writer.Header().Set(trace.KratosTraceID, xrequestid)
+			c.Writer.Header().Set("bdw-trace-id", xrequestid)
 		}
 
 		//c.Context = trace.NewContext(c.Context, t)

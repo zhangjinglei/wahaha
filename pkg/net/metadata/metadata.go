@@ -76,6 +76,19 @@ func FromContext(ctx context.Context) (md MD, ok bool) {
 	return
 }
 
+func GetTraceId(ctx context.Context) string {
+	fromContext, ok := FromContext(ctx)
+	if ok {
+
+		i, exist := fromContext["x-b3-traceid"]
+		if exist {
+			return i.(string)
+		}
+
+	}
+	return ""
+}
+
 //http server从请求中获取向外传递的链路追踪信息
 func GetHttpTrace(ctx context.Context) map[string]string {
 	m := make(map[string]string)

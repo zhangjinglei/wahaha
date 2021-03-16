@@ -10,12 +10,12 @@ import (
 	"github.com/zhangjinglei/wahaha/pkg/conf/env"
 	"github.com/zhangjinglei/wahaha/pkg/log/internal/core"
 	"github.com/zhangjinglei/wahaha/pkg/net/metadata"
-	"github.com/zhangjinglei/wahaha/pkg/net/trace"
 )
 
 func addExtraField(ctx context.Context, fields map[string]interface{}) {
-	if t, ok := trace.FromContext(ctx); ok {
-		fields[_tid] = t.TraceID()
+	t := metadata.GetTraceId(ctx)
+	if t != "" {
+		fields[_tid] = t
 	}
 	if caller := metadata.String(ctx, metadata.Caller); caller != "" {
 		fields[_caller] = caller
